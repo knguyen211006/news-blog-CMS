@@ -4,7 +4,7 @@ use App\Core\{Auth,DB,View,HttpException};
 use App\Models\{User,Taxonomy,Comment};
 final class AdminController {
     public function dashboard(): void {
-        Auth::requireUser(['ADMIN']);
+        Auth::requireAdmin();
         View::render('admin/dashboard',[
             'title'=>'Tổng quan tòa soạn',
             'counts'=>DB::all('SELECT status,COUNT(*) count FROM posts WHERE deleted_at IS NULL GROUP BY status'),
@@ -16,7 +16,7 @@ final class AdminController {
         ]);
     }
     public function users(): void {
-        Auth::requireUser(['ADMIN']);$error=null;
+        Auth::requireAdmin();$error=null;
         if($_SERVER['REQUEST_METHOD']==='POST'){
             try{
                 $locked=posted('is_locked');
@@ -33,7 +33,7 @@ final class AdminController {
         View::render('admin/users',compact('items','q','total','size','page','error')+['title'=>'Thành viên & phân quyền'],$status??200);
     }
     public function taxonomy(): void {
-        Auth::requireUser(['ADMIN']);
+        Auth::requireAdmin();
         $kind=Taxonomy::table(is_string($_GET['kind']??null)?$_GET['kind']:'categories');$error=null;
         if($_SERVER['REQUEST_METHOD']==='POST'){
             try{
@@ -48,7 +48,7 @@ final class AdminController {
         View::render('admin/taxonomy',['title'=>$kind==='categories'?'Quản lý chuyên mục':'Quản lý thẻ','kind'=>$kind,'items'=>DB::all("SELECT * FROM $kind ORDER BY name"),'edit'=>$edit,'error'=>$error],$status??200);
     }
     public function comments(): void {
-        $u=Auth::requireUser(['ADMIN']);
+        $u=Auth::requireAdmin();
         if($_SERVER['REQUEST_METHOD']==='POST'){
             Comment::moderate($u,number_input('id'),number_input('version'),posted('status'));
             flash('Đã cập nhật trạng thái bình luận.');redirect('admin/comments');

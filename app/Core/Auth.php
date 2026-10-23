@@ -13,4 +13,10 @@ final class Auth {
         if ($roles && !in_array($u['role'],$roles,true)) throw new HttpException(403,'Bạn không có quyền thực hiện thao tác này.');
         return $u;
     }
+    public static function requireAdmin(): array {
+        $u=self::user();
+        if (!$u) redirect('login');
+        if ($u['role']!=='ADMIN') throw new HttpException(403,'Bạn không có quyền thực hiện thao tác này.');
+        return $u;
+    }
 }

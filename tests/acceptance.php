@@ -56,6 +56,8 @@ check('Tác giả 1 đăng nhập',$author->login('author1@newsblog.local')['sta
 check('Tác giả 2 đăng nhập',$other->login('author2@newsblog.local')['status']===303);
 check('Độc giả đăng nhập',$reader->login('reader1@newsblog.local')['status']===303);
 check('USER không vào được Admin',$reader->request('admin')['status']===403);
+$unauthenticatedAdmin=$guest->request('admin');
+check('Khách được chuyển tới đăng nhập khi mở Admin',$unauthenticatedAdmin['status']===303&&str_contains($unauthenticatedAdmin['location'],'r=login'));
 check('USER không vào được form tác giả',$reader->request('author/edit')['status']===403);
 check('AUTHOR không vào được Admin',$author->request('admin/users')['status']===403);
 check('AUTHOR không vào được danh sách toàn bộ bài',$author->request('admin/posts')['status']===403);

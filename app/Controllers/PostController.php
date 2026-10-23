@@ -4,7 +4,7 @@ use App\Core\{Auth,DB,View,HttpException};
 use App\Models\Post;
 final class PostController {
     public function listing(): void { $this->list(false); }
-    public function adminListing(): void { Auth::requireUser(['ADMIN']); $this->list(true); }
+    public function adminListing(): void { Auth::requireAdmin(); $this->list(true); }
     private function list(bool $all): void {
         $u=Auth::requireUser(['AUTHOR','ADMIN']);
         $status=is_string($_GET['status']??null)?$_GET['status']:'';
