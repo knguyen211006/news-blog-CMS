@@ -1,0 +1,8 @@
+Options -Indexes
+DirectoryIndex index.php
+RewriteEngine On
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^(?!index\.php$|assets/|uploads/|$) - [F,L]
+<FilesMatch "(?i)\.(env|sql|log|ini|bak|md|json)$">
+Require all denied
+</FilesMatch>

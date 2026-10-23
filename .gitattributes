@@ -1,0 +1,11 @@
+* text=auto eol=lf
+vendor/** -text
+assets/vendor/** -text
+*.ser binary
+*.php text eol=lf
+*.sql text eol=lf
+*.md text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.svg text eol=lf
+*.ps1 text eol=crlf

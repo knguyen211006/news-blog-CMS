@@ -1,0 +1,50 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+actor "Khách" as Guest
+actor "USER\nĐộc giả" as Reader
+actor "AUTHOR\nTác giả" as Author
+actor "ADMIN\nQuản trị viên" as Admin
+Reader --|> Guest
+Author --|> Reader
+Admin --|> Author
+rectangle "Website quản lý tin tức và blog đa tác giả" {
+ usecase "Đọc bài published\nTìm kiếm / lọc / phân trang" as Read
+ usecase "Đăng ký tài khoản USER" as Register
+ usecase "Đăng nhập / đăng xuất" as Login
+ usecase "Cập nhật hồ sơ" as Profile
+ usecase "Bình luận / trả lời một cấp" as Comment
+ usecase "Ẩn bình luận của mình" as Hide
+ usecase "Tạo / sửa / xóa mềm\nnháp của mình" as Draft
+ usecase "Soạn rich text / upload ảnh\nchọn chuyên mục, thẻ" as Editor
+ usecase "Xem trước / gửi duyệt" as Submit
+ usecase "Xem trạng thái và lý do trả" as Status
+ usecase "Duyệt / trả bài có lý do\ngỡ bài về draft" as Review
+ usecase "Quản lý toàn bộ bài" as AllPosts
+ usecase "CRUD chuyên mục / thẻ" as Taxonomy
+ usecase "Cấp vai trò / khóa tài khoản" as Users
+ usecase "Duyệt / ẩn bình luận" as Moderate
+ usecase "Dashboard thống kê" as Dashboard
+}
+Guest --> Read
+Guest --> Register
+Reader --> Login
+Reader --> Profile
+Reader --> Comment
+Reader --> Hide
+Author --> Draft
+Draft .> Editor : <<include>>
+Author --> Submit
+Author --> Status
+Admin --> Review
+Admin --> AllPosts
+Admin --> Taxonomy
+Admin --> Users
+Admin --> Moderate
+Admin --> Dashboard
+note bottom of Review
+ Chỉ Admin xuất bản.
+ Kiểm tra version và trạng thái trong transaction.
+ Bài pending/published không sửa trực tiếp.
+end note
+@enduml

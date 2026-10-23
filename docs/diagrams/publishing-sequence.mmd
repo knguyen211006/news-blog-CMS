@@ -1,0 +1,42 @@
+sequenceDiagram
+ actor Author as Tác giả
+ participant Browser as Trình duyệt
+ participant Controller as PostController
+ participant Auth as Auth + CSRF
+ participant Model as Post model
+ participant DB as MySQL / InnoDB
+ actor Admin as Admin
+ Author->>Browser: Soạn nháp, chọn ảnh, thẻ
+ Browser->>Controller: POST author/edit + CSRF
+ Controller->>Auth: Kiểm tra phiên và AUTHOR/ADMIN
+ Controller->>Model: save(user, id)
+ Model->>Model: Validation, HTML Purifier, MIME ảnh
+ Model->>DB: BEGIN; SELECT post FOR UPDATE nếu sửa
+ Model->>Model: Kiểm tra chủ sở hữu, status, version
+ Model->>DB: INSERT/UPDATE posts; cập nhật post_tags; INSERT history
+ Model->>DB: COMMIT
+ Controller-->>Browser: 303 đến xem trước
+ Author->>Controller: POST submit + version
+ Controller->>Model: transition(submit)
+ Model->>DB: BEGIN; SELECT FOR UPDATE
+ Model->>Model: Nội dung đủ + category hợp lệ + version khớp
+ Model->>DB: status=pending; version++; history; COMMIT
+ Admin->>Controller: POST reject + reason + version
+ Controller->>Auth: Kiểm tra ADMIN và CSRF
+ Controller->>Model: transition(reject)
+ Model->>DB: Khóa dòng; kiểm tra pending/version
+ Model->>DB: status=rejected; lý do; version++; history; COMMIT
+ Author->>Controller: Sửa rồi gửi duyệt lại
+ Controller->>Model: save, sau đó transition(submit)
+ Model->>DB: Kiểm tra và cập nhật trong các transaction
+ Admin->>Controller: POST publish + version
+ Controller->>Auth: Kiểm tra ADMIN
+ Controller->>Model: transition(publish)
+ Model->>DB: BEGIN; SELECT FOR UPDATE
+ alt pending và version khớp
+  Model->>DB: status=published; published_at; version++; history; COMMIT
+  Controller-->>Admin: Thành công
+ else Bài đã thay đổi
+  Model->>DB: ROLLBACK
+  Controller-->>Admin: HTTP 409; tải lại trang
+ end

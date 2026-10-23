@@ -1,0 +1,26 @@
+sequenceDiagram
+ actor Reader as Độc giả
+ participant Controller as CommentController
+ participant Security as Auth / CSRF / Rate limit
+ participant Model as Comment model
+ participant DB as MySQL
+ actor Admin as Admin
+ Reader->>Controller: POST content, post_id, parent_id
+ Controller->>Security: Phiên hoạt động, CSRF, 1 lần / 20 giây
+ Controller->>Model: create()
+ Model->>DB: BEGIN; khóa bài viết
+ Model->>Model: Kiểm tra published và chưa xóa
+ opt Có parent_id
+  Model->>DB: Đọc bình luận cha FOR UPDATE
+  Model->>Model: Cùng bài, parent_id null, status approved
+ end
+ Model->>DB: INSERT comment status=pending; COMMIT
+ Controller-->>Reader: Chờ Admin duyệt
+ Admin->>Controller: POST duyệt + version
+ Controller->>Security: ADMIN + CSRF
+ Controller->>Model: moderate(approved)
+ Model->>DB: BEGIN; khóa dòng; kiểm tra version
+ Model->>DB: UPDATE status, version; COMMIT
+ Reader->>Controller: GET chi tiết bài
+ Controller->>DB: Lấy bình luận đã duyệt / gốc ẩn
+ Controller-->>Reader: Escape văn bản; gốc ẩn giữ phản hồi đã duyệt

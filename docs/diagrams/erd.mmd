@@ -1,0 +1,85 @@
+erDiagram
+ users ||--o{ posts : authors
+ users ||--o{ comments : writes
+ categories o|--o{ posts : classifies
+ posts ||--o{ post_tags : has
+ tags ||--o{ post_tags : labels
+ posts ||--o{ comments : contains
+ comments o|--o{ comments : parent
+ posts ||--o{ post_history : records
+ users ||--o{ post_history : acts
+ users {
+  bigint id PK
+  varchar name
+  varchar email UK
+  varchar password_hash
+  enum role
+  boolean is_locked
+  varchar bio
+  datetime created_at
+  datetime updated_at
+ }
+ categories {
+  bigint id PK
+  varchar name
+  varchar slug UK
+  varchar description
+  datetime created_at
+  datetime updated_at
+ }
+ tags {
+  bigint id PK
+  varchar name
+  varchar slug UK
+  datetime created_at
+  datetime updated_at
+ }
+ posts {
+  bigint id PK
+  bigint author_id FK
+  bigint category_id FK "nullable in draft"
+  varchar title
+  varchar slug UK
+  varchar excerpt
+  mediumtext content
+  varchar cover_image
+  enum status
+  varchar rejection_reason
+  boolean is_featured
+  bigint views
+  int version
+  datetime published_at
+  datetime deleted_at
+  datetime created_at
+  datetime updated_at
+ }
+ post_tags {
+  bigint post_id PK,FK
+  bigint tag_id PK,FK
+ }
+ comments {
+  bigint id PK
+  bigint post_id FK
+  bigint user_id FK
+  bigint parent_id FK "nullable; one reply level"
+  varchar content
+  enum status
+  int version
+  datetime created_at
+  datetime updated_at
+ }
+ post_history {
+  bigint id PK
+  bigint post_id FK
+  bigint actor_id FK
+  varchar action
+  varchar from_status
+  varchar to_status
+  varchar note
+  datetime created_at
+ }
+ rate_limits {
+  char bucket PK "SHA256 of server-side key"
+  int attempts
+  datetime reset_at
+ }

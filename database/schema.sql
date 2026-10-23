@@ -1,0 +1,99 @@
+-- news-blog-cms: no DROP statements. Import only into a NEW database.
+CREATE DATABASE IF NOT EXISTS news_blog_cms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE news_blog_cms;
+SET NAMES utf8mb4;
+CREATE TABLE users (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ email VARCHAR(190) NOT NULL UNIQUE,
+ password_hash VARCHAR(255) NOT NULL,
+ role ENUM('USER','AUTHOR','ADMIN') NOT NULL DEFAULT 'USER',
+ is_locked TINYINT(1) NOT NULL DEFAULT 0,
+ bio VARCHAR(500) NOT NULL DEFAULT '',
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ INDEX idx_users_role_locked(role,is_locked)
+) ENGINE=InnoDB;
+CREATE TABLE categories (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ slug VARCHAR(180) NOT NULL UNIQUE,
+ description VARCHAR(500) NOT NULL DEFAULT '',
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+CREATE TABLE tags (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(100) NOT NULL,
+ slug VARCHAR(180) NOT NULL UNIQUE,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+CREATE TABLE posts (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ author_id BIGINT UNSIGNED NOT NULL,
+ category_id BIGINT UNSIGNED NULL,
+ title VARCHAR(200) NOT NULL,
+ slug VARCHAR(200) NOT NULL UNIQUE,
+ excerpt VARCHAR(500) NOT NULL DEFAULT '',
+ content MEDIUMTEXT NOT NULL,
+ cover_image VARCHAR(255) NULL,
+ status ENUM('draft','pending','published','rejected') NOT NULL DEFAULT 'draft',
+ rejection_reason VARCHAR(2000) NULL,
+ is_featured TINYINT(1) NOT NULL DEFAULT 0,
+ views BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ version INT UNSIGNED NOT NULL DEFAULT 1,
+ published_at DATETIME NULL,
+ deleted_at DATETIME NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ CONSTRAINT fk_posts_author FOREIGN KEY(author_id) REFERENCES users(id) ON DELETE RESTRICT,
+ CONSTRAINT fk_posts_category FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE RESTRICT,
+ INDEX idx_posts_public(status,deleted_at,published_at),
+ INDEX idx_posts_author(author_id,status,deleted_at),
+ INDEX idx_posts_category(category_id,status,deleted_at),
+ INDEX idx_posts_views(status,deleted_at,views)
+) ENGINE=InnoDB;
+CREATE TABLE post_tags (
+ post_id BIGINT UNSIGNED NOT NULL,
+ tag_id BIGINT UNSIGNED NOT NULL,
+ PRIMARY KEY(post_id,tag_id),
+ CONSTRAINT fk_pt_post FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE,
+ CONSTRAINT fk_pt_tag FOREIGN KEY(tag_id) REFERENCES tags(id) ON DELETE CASCADE,
+ INDEX idx_pt_tag(tag_id,post_id)
+) ENGINE=InnoDB;
+CREATE TABLE comments (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ post_id BIGINT UNSIGNED NOT NULL,
+ user_id BIGINT UNSIGNED NOT NULL,
+ parent_id BIGINT UNSIGNED NULL,
+ content VARCHAR(2000) NOT NULL,
+ status ENUM('pending','approved','hidden') NOT NULL DEFAULT 'pending',
+ version INT UNSIGNED NOT NULL DEFAULT 1,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ CONSTRAINT fk_comments_post FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE RESTRICT,
+ CONSTRAINT fk_comments_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE RESTRICT,
+ CONSTRAINT fk_comments_parent FOREIGN KEY(parent_id) REFERENCES comments(id) ON DELETE RESTRICT,
+ INDEX idx_comments_thread(post_id,parent_id,status,created_at),
+ INDEX idx_comments_status(status,created_at)
+) ENGINE=InnoDB;
+CREATE TABLE post_history (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ post_id BIGINT UNSIGNED NOT NULL,
+ actor_id BIGINT UNSIGNED NOT NULL,
+ action VARCHAR(30) NOT NULL,
+ from_status VARCHAR(20) NULL,
+ to_status VARCHAR(20) NOT NULL,
+ note VARCHAR(2000) NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT fk_history_post FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE RESTRICT,
+ CONSTRAINT fk_history_actor FOREIGN KEY(actor_id) REFERENCES users(id) ON DELETE RESTRICT,
+ INDEX idx_history_post(post_id,created_at)
+) ENGINE=InnoDB;
+CREATE TABLE rate_limits (
+ bucket CHAR(64) PRIMARY KEY,
+ attempts INT UNSIGNED NOT NULL DEFAULT 0,
+ reset_at DATETIME NOT NULL,
+ INDEX idx_rate_reset(reset_at)
+) ENGINE=InnoDB;

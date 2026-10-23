@@ -1,0 +1,13 @@
+<?php $actor=current_user(); ?>
+<div class="post-actions">
+<?php if(in_array($post['status'],['draft','rejected'],true)): ?>
+<a class="btn btn-outline-dark" href="<?= e(url('author/edit',['id'=>$post['id']])) ?>">Chỉnh sửa</a>
+<form method="post" action="<?= e(url('author/action')) ?>" data-confirm="Gửi bài để Admin duyệt? Bạn sẽ không thể sửa khi bài đang chờ duyệt."><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$post['id'] ?>"><input type="hidden" name="version" value="<?= (int)$post['version'] ?>"><button class="btn btn-dark" name="action" value="submit">Gửi duyệt ↗</button></form>
+<?php endif ?>
+<?php if($actor['role']==='ADMIN' && $post['status']==='pending'): ?>
+<form method="post" action="<?= e(url('author/action')) ?>" data-confirm="Xuất bản bài viết này?"><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$post['id'] ?>"><input type="hidden" name="version" value="<?= (int)$post['version'] ?>"><button class="btn btn-success" name="action" value="publish">Duyệt & xuất bản</button></form>
+<details class="reject-form"><summary class="btn btn-outline-warning">Trả bài để sửa</summary><form method="post" action="<?= e(url('author/action')) ?>"><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$post['id'] ?>"><input type="hidden" name="version" value="<?= (int)$post['version'] ?>"><label for="reason">Lý do trả bài</label><textarea class="form-control" id="reason" name="reason" minlength="5" maxlength="2000" required></textarea><button class="btn btn-warning mt-2" name="action" value="reject">Xác nhận trả bài</button></form></details>
+<?php endif ?>
+<?php if($actor['role']==='ADMIN' && $post['status']==='published'): ?><form method="post" action="<?= e(url('author/action')) ?>" data-confirm="Gỡ bài về nháp? Bài sẽ ngừng hiển thị công khai."><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$post['id'] ?>"><input type="hidden" name="version" value="<?= (int)$post['version'] ?>"><button class="btn btn-outline-warning" name="action" value="unpublish">Gỡ về bản nháp</button></form><?php endif ?>
+<?php if($actor['role']==='ADMIN' || in_array($post['status'],['draft','rejected'],true)): ?><form method="post" action="<?= e(url('author/action')) ?>" data-confirm="Xóa mềm bài viết này? Bài và bình luận sẽ không còn hiển thị công khai; lịch sử vẫn được giữ."><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$post['id'] ?>"><input type="hidden" name="version" value="<?= (int)$post['version'] ?>"><button class="btn btn-outline-danger" name="action" value="delete">Xóa mềm</button></form><?php endif ?>
+</div>

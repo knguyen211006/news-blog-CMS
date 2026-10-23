@@ -1,0 +1,10 @@
+/config/local.php
+/config/test.php
+/storage/*
+!/storage/.gitkeep
+/uploads/*
+!/uploads/.htaccess
+!/uploads/.gitkeep
+/.env
+*.zip
+/tests/results/*.json
