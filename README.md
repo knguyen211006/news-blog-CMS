@@ -158,12 +158,12 @@ Kiểm tra bảo vệ thư mục: các URL sau phải trả **403**, không tr�
 
 Kết quả thực tế trong **docs/TEST-RESULTS.md**; biên bản môi trường trong **docs/ENVIRONMENT.md**. Bài kiểm thử tự động chỉ được chạy trên **news_blog_cms_test**, tuyệt đối không dùng database demo chính.
 
-Tạo database thử nghiệm trống (script sẽ từ chối nếu đã có bảng):
+Tạo database thử nghiệm riêng `news_blog_cms_test` từ database trống. Lệnh `--test` tạo `config/test.php` riêng trỏ tới database này; file chứa thông tin kết nối máy local, bị Git bỏ qua và không có trong ZIP nộp. Script từ chối chạy nếu database test đã có bảng:
 ~~~powershell
 & 'C:\xampp\php\php.exe' scripts/install.php --xampp=C:\xampp --test
 ~~~
 
-Mở một cửa sổ PowerShell riêng, vào thư mục dự án rồi chạy:
+Không sao chép `config/local.php` thành cấu hình test hoặc chạy acceptance trên database demo `news_blog_cms`. Mở một cửa sổ PowerShell riêng, vào thư mục dự án rồi chạy server bằng `config/test.php`:
 ~~~powershell
 $env:CMS_CONFIG = (Resolve-Path '.\config\test.php').Path
 & 'C:\xampp\php\php.exe' -S 127.0.0.1:8089 scripts/router.php
@@ -175,7 +175,7 @@ Set-Location 'C:\xampp\htdocs\news-blog-cms'
 & 'C:\xampp\php\php.exe' tests/acceptance.php
 ~~~
 
-Kết quả mong đợi: **88 passed, 0 failed**. Bộ kiểm thử tạo thêm dữ liệu trong database test, giữ lại để điều tra; có thể chạy lại. Không kiểm thử trên dữ liệu sản xuất. Ctrl+C trong cửa sổ server để dừng.
+Kết quả mong đợi hiện tại: **89 passed, 0 failed**. Bộ kiểm thử xác nhận chỉ dùng `news_blog_cms_test`, tạo thêm dữ liệu trong database test và giữ lại để điều tra; có thể chạy lại. Không kiểm thử trên dữ liệu sản xuất. Ctrl+C trong cửa sổ server để dừng.
 
 Để kiểm tra cú pháp:
 ~~~powershell
