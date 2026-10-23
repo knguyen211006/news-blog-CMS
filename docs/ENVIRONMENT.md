@@ -42,6 +42,8 @@ Không nên coi lỗi mysql.db là lỗi mã nguồn CMS. Nếu sau này không 
 ## Kiểm thử và phần chưa xác nhận
 
 - PHP syntax, HTML Purifier, kết nối DB và 88 ca HTTP + database đã chạy thật, PASS. Chi tiết TEST-RESULTS.md.
+- 32/32 kiểm tra URL/tài nguyên và chặn file nội bộ PASS trên PHP router ở cổng 8088; đây chưa phải kiểm chứng .htaccess của Apache.
+- Đã giải nén ZIP nộp vào thư mục sạch, cung cấp riêng local.php và chạy scripts/check.php: extension, kết nối DB, số bản ghi và HTML Purifier đều PASS. Dùng lại MariaDB/XAMPP hiện tại, không coi là cài một XAMPP mới.
 - Hai lần chạy kiểm thử sau sửa session/validation đều PASS.
 - Chưa xác nhận trực tiếp trên một bộ XAMPP mới hoàn toàn; đã import SQL vào database trống riêng trên XAMPP hiện tại.
 - Chrome headless được thử bằng profile riêng trong thư mục tạm nhưng thoát vì GPU process không khởi động được trong môi trường giới hạn. Chưa xác nhận tương tác editor hoặc bố cục bằng trình duyệt đồ họa.
