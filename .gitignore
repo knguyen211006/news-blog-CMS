@@ -6,5 +6,12 @@
 !/uploads/.htaccess
 !/uploads/.gitkeep
 /.env
+/e2e/.env
+/e2e/.auth/
+/e2e/node_modules/
+/e2e/test-results/
+/e2e/playwright-report/
+/e2e/.browsers/
+/e2e/.npm-cache/
 *.zip
 /tests/results/*.json

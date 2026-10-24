@@ -17,7 +17,11 @@ with zipfile.ZipFile(target, "x", zipfile.ZIP_DEFLATED) as archive:
         if not path.is_file():
             continue
         relative = path.relative_to(root).as_posix()
-        if relative.startswith((".git/", "tests/results/")) or relative == "config/test.php":
+        if relative.startswith((".git/", "tests/results/", "e2e/node_modules/",
+                                "e2e/.browsers/", "e2e/.npm-cache/", "e2e/.auth/",
+                                "e2e/test-results/", "e2e/playwright-report/")) or relative == "config/test.php":
+            continue
+        if path.name.startswith(".env") and path.name != ".env.example":
             continue
         if relative == "config/local.php" and not args.include_local_config:
             continue

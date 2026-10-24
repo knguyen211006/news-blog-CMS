@@ -1,8 +1,3 @@
-document.querySelectorAll('form[data-confirm]').forEach(form => {
-  form.addEventListener('submit', event => {
-    if (!window.confirm(form.dataset.confirm)) event.preventDefault();
-  });
-});
 document.querySelectorAll('[data-go-back]').forEach(button => {
   button.addEventListener('click', () => history.length > 1 ? history.back() : location.assign('./'));
 });
@@ -57,3 +52,62 @@ if(cover){
     document.getElementById('cover-preview').src=blob;
   });
 }
+
+// Run after form-specific handlers (including the editor). Native validation
+// happens before submit; cancelled confirmations must leave the form usable.
+const pendingForms = new Map();
+document.addEventListener('submit', event => {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement) || event.defaultPrevented) return;
+  if (pendingForms.has(form)) {
+    event.preventDefault();
+    return;
+  }
+  if (form.dataset.confirm && !window.confirm(form.dataset.confirm)) {
+    event.preventDefault();
+    return;
+  }
+
+  const submitter = event.submitter;
+  // Disabled controls are omitted from native POST data. Preserve the clicked
+  // button's value (action=publish/delete, status=approved/hidden, etc.).
+  let proxy;
+  if (submitter && submitter.name && !submitter.disabled) {
+    proxy = document.createElement('input');
+    proxy.type = 'hidden';
+    proxy.name = submitter.name;
+    proxy.value = submitter.value;
+    form.append(proxy);
+  }
+  const buttons = Array.from(form.elements).filter(control =>
+    (control instanceof HTMLButtonElement || control instanceof HTMLInputElement) &&
+    control.type === 'submit' && !control.disabled
+  );
+  const originals = buttons.map(button => [button, button instanceof HTMLInputElement ? button.value : button.innerHTML]);
+  pendingForms.set(form, { originals, proxy });
+  form.setAttribute('aria-busy', 'true');
+  buttons.forEach(button => {
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    if (button === submitter || !submitter) {
+      button.setAttribute('data-loading', '');
+      if (button instanceof HTMLInputElement) button.value = 'Đang xử lý…';
+      else button.textContent = 'Đang xử lý…';
+    }
+  });
+});
+
+window.addEventListener('pageshow', () => {
+  pendingForms.forEach(({ originals, proxy }, form) => {
+    originals.forEach(([button, label]) => {
+      button.disabled = false;
+      button.removeAttribute('data-loading');
+      button.removeAttribute('aria-busy');
+      if (button instanceof HTMLInputElement) button.value = label;
+      else button.innerHTML = label;
+    });
+    proxy?.remove();
+    form.removeAttribute('aria-busy');
+  });
+  pendingForms.clear();
+});

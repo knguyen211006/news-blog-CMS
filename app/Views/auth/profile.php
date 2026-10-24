@@ -1,11 +1,82 @@
-<div class="page-heading"><span class="eyebrow">KHÔNG GIAN CỦA BẠN</span><h1>Xin chào, <?= e($profile['name']) ?>.</h1><p>Vai trò: <strong><?= e(['USER'=>'Độc giả','AUTHOR'=>'Tác giả','ADMIN'=>'Quản trị viên'][$profile['role']]) ?></strong> · Tham gia từ <?= date('d/m/Y',strtotime($profile['created_at'])) ?></p></div>
-<div class="row g-4"><section class="col-lg-5"><div class="panel"><h2>Thông tin cá nhân</h2><?php require ROOT.'/app/Views/partials/error.php'; ?><form method="post" action="<?= e(url('profile')) ?>"><?= csrf_field() ?>
-<label class="form-label" for="name">Họ và tên</label><input id="name" name="name" class="form-control mb-3" value="<?= e(posted('name',$profile['name'])) ?>" minlength="2" maxlength="100" required>
-<label class="form-label" for="email">Email</label><input id="email" name="email" type="email" class="form-control mb-3" value="<?= e(posted('email',$profile['email'])) ?>" maxlength="190" required>
-<label class="form-label" for="bio">Giới thiệu ngắn</label><textarea class="form-control mb-3" id="bio" name="bio" rows="3" maxlength="500"><?= e(posted('bio',$profile['bio'])) ?></textarea>
-<details class="password-change"><summary>Đổi mật khẩu</summary><label class="form-label mt-3" for="current_password">Mật khẩu hiện tại</label><input class="form-control" id="current_password" type="password" name="current_password" autocomplete="current-password"><label class="form-label mt-3" for="new_password">Mật khẩu mới (8–72 ký tự)</label><input class="form-control" id="new_password" type="password" name="new_password" minlength="8" maxlength="72" autocomplete="new-password"><p class="form-text">Để trống nếu bạn chỉ cập nhật hồ sơ.</p></details>
-<button class="btn btn-dark mt-3">Lưu thay đổi</button></form></div></section>
-<section class="col-lg-7"><div class="panel"><h2>Bình luận gần đây của bạn</h2><p class="text-muted">Tối đa 50 bình luận mới nhất.</p><?php if(!$comments): ?><div class="empty-state">Bạn chưa gửi bình luận nào.</div><?php endif ?>
-<?php foreach($comments as $c): ?><article class="profile-comment"><div class="d-flex flex-wrap gap-2 justify-content-between"><strong><?= e($c['title']) ?></strong><?= badge($c['status']) ?></div><p class="plain-comment"><?= $c['status']==='hidden'?'Bạn đã ẩn bình luận này.':e($c['content']) ?></p><div class="d-flex gap-3"><?php if($c['post_status']==='published' && !$c['deleted_at']): ?><a href="<?= e(url('article',['slug'=>$c['slug']])) ?>">Đọc bài ↗</a><?php endif ?>
-<?php if($c['status']!=='hidden'): ?><form method="post" action="<?= e(url('comments/hide')) ?>" data-confirm="Ẩn bình luận này?"><?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$c['id'] ?>"><input type="hidden" name="version" value="<?= (int)$c['version'] ?>"><button class="text-button">Ẩn bình luận</button></form><?php endif ?></div></article><?php endforeach ?>
-</div></section></div>
+<div class="page-heading">
+  <span class="eyebrow">KHÔNG GIAN CỦA BẠN</span>
+  <h1>Xin chào, <?= e($profile['name']) ?>.</h1>
+  <p>Vai trò: <strong><?= e(['USER' => 'Độc giả', 'AUTHOR' => 'Tác giả', 'ADMIN' => 'Quản trị viên'][$profile['role']]) ?></strong> · Tham gia từ <?= date('d/m/Y', strtotime($profile['created_at'])) ?></p>
+</div>
+
+<div class="row g-4">
+  <section class="col-lg-5">
+    <div class="panel" data-testid="profile-info-panel">
+      <h2>Thông tin cá nhân</h2>
+      <?php require ROOT . '/app/Views/partials/error.php'; ?>
+      <form method="post" action="<?= e(url('profile')) ?>" data-testid="profile-update-form" data-submit-lock>
+        <?= csrf_field() ?>
+        <div class="mb-3">
+          <label class="form-label" for="name">Họ và tên</label>
+          <input id="name" name="name" class="form-control"
+                 value="<?= e(posted('name', $profile['name'])) ?>"
+                 minlength="2" maxlength="100" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="email">Email</label>
+          <input id="email" name="email" type="email" class="form-control"
+                 value="<?= e(posted('email', $profile['email'])) ?>"
+                 maxlength="190" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="bio">Giới thiệu ngắn</label>
+          <textarea class="form-control" id="bio" name="bio" rows="3" maxlength="500"><?= e(posted('bio', $profile['bio'])) ?></textarea>
+        </div>
+        <details class="password-change">
+          <summary>Đổi mật khẩu</summary>
+          <div class="mt-3">
+            <label class="form-label" for="current_password">Mật khẩu hiện tại</label>
+            <input class="form-control mb-3" id="current_password" type="password" name="current_password" autocomplete="current-password">
+            <label class="form-label" for="new_password">Mật khẩu mới (8–72 ký tự)</label>
+            <input class="form-control" id="new_password" type="password" name="new_password" minlength="8" maxlength="72" autocomplete="new-password">
+            <p class="form-text mt-2">Để trống nếu bạn chỉ cập nhật hồ sơ.</p>
+          </div>
+        </details>
+        <button class="btn btn-dark mt-4" type="submit" data-testid="profile-save-btn">Lưu thay đổi</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="col-lg-7">
+    <div class="panel" data-testid="profile-comments-panel">
+      <h2>Bình luận gần đây của bạn</h2>
+      <p class="text-muted" style="font-size:13px">Tối đa 50 bình luận mới nhất.</p>
+      <?php if (!$comments): ?>
+        <div class="empty-state empty-state--compact" data-testid="profile-comments-empty">
+          <div class="empty-state__icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <p class="empty-state__desc">Bạn chưa gửi bình luận nào.</p>
+          <a class="btn btn-outline-dark" href="<?= e(url('articles')) ?>" data-testid="profile-empty-browse-btn">Khám phá bài viết</a>
+        </div>
+      <?php endif ?>
+      <?php foreach ($comments as $c): ?>
+        <article class="profile-comment">
+          <div class="d-flex flex-wrap gap-2 justify-content-between">
+            <strong><?= e($c['title']) ?></strong>
+            <?= badge($c['status']) ?>
+          </div>
+          <p class="plain-comment"><?= $c['status'] === 'hidden' ? 'Bạn đã ẩn bình luận này.' : e($c['content']) ?></p>
+          <div class="d-flex gap-3">
+            <?php if ($c['post_status'] === 'published' && !$c['deleted_at']): ?>
+              <a href="<?= e(url('article', ['slug' => $c['slug']])) ?>">Đọc bài ↗</a>
+            <?php endif ?>
+            <?php if ($c['status'] !== 'hidden'): ?>
+              <form method="post" action="<?= e(url('comments/hide')) ?>" data-confirm="Ẩn bình luận này?" data-testid="profile-comment-hide-form">
+                <?= csrf_field() ?>
+                <input type="hidden" name="id" value="<?= (int) $c['id'] ?>">
+                <input type="hidden" name="version" value="<?= (int) $c['version'] ?>">
+                <button class="text-button" data-testid="profile-comment-hide-btn">Ẩn bình luận</button>
+              </form>
+            <?php endif ?>
+          </div>
+        </article>
+      <?php endforeach ?>
+    </div>
+  </section>
+</div>
