@@ -36,6 +36,13 @@ test('save editor content then delete only the created draft, preserving named s
     saveGate.release();
     await admin.expectPreview(title);
     await expect(article.body).toContainText(content);
+    const history = page.getByRole('region', { name: 'Lịch sử biên tập' });
+    await history.focus();
+    await expect(history).toBeFocused();
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Shift+Tab');
+    await expect(history).toBeFocused();
+    await new UiPage(page).expectAccessible();
   } finally { await saveGate.dispose(); await savePending.dispose(); }
 
   const deleteGate = await holdSubmit(page, 'author/action');
@@ -79,5 +86,7 @@ for (const [name, target, params] of [
     await new UiPage(page).expectDarkResponsive();
     await new UiPage(page).expectAccessible();
     await new UiPage(page).expectButtonTargets();
+    await new UiPage(page).expectReadableLinks(page.getByTestId('profile-link'));
+    if (name === 'editor') await new UiPage(page).expectFileButtonContrast();
   });
 }

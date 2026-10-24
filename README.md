@@ -4,7 +4,7 @@
 
 Ứng dụng viết bằng **PHP MVC thuần** (không framework), kết nối MySQL/MariaDB qua PDO, giao diện tiếng Việt. Khi vận hành không cần Composer, npm, CDN hay dịch vụ bên ngoài; font dùng font có sẵn của hệ điều hành (Segoe UI, Cambria).
 
-Repository: *(điền đường dẫn GitHub/GitLab của nhóm sau khi đẩy mã nguồn)*
+Repository: https://github.com/knguyen211006/news-blog-CMS
 
 ## 1. Thành viên và phân công
 

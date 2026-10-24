@@ -50,8 +50,8 @@
 
 <?php if ($preview): ?>
 <section class="article-discussion">
-  <h2>Lịch sử biên tập</h2>
-  <div class="table-responsive">
+  <h2 id="edit-history-heading">Lịch sử biên tập</h2>
+  <div class="table-responsive" tabindex="0" role="region" aria-labelledby="edit-history-heading">
     <table class="table" data-testid="article-edit-history-table">
       <thead><tr><th>Thời điểm</th><th>Người thao tác</th><th>Thao tác</th><th>Trạng thái</th></tr></thead>
       <tbody>

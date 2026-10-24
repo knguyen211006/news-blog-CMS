@@ -33,7 +33,8 @@ class Client {
   $this->request('login');$r=$this->request('login',[],['email'=>$email,'password'=>$password]);$this->request('profile');return $r;
  }
 }
-DB::query('DELETE FROM rate_limits');
+require __DIR__.'/support/reset-database.php';
+resetTestDatabase();
 $guest=new Client($base);$admin=new Client($base);$author=new Client($base);$other=new Client($base);$reader=new Client($base);
 try {
 $r=$guest->request();check('Trang chủ lấy bài từ database',$r['status']===200&&str_contains($r['body'],'Những câu chuyện vừa lên trang'));

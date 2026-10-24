@@ -8,6 +8,7 @@ test('home has usable article cards and a dark, accessible responsive layout', a
   await home.goto();
   await expect(home.articleCards.first()).toBeVisible();
   await expect(home.categoryStrip).toBeVisible();
+  await new UiPage(page).expectReadableLinks(home.categoryStrip.getByRole('link'));
   await new UiPage(page).expectDarkResponsive();
   await new UiPage(page).expectAccessible();
 });

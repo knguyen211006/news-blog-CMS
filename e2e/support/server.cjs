@@ -12,6 +12,10 @@ const check = spawnSync(php, ['-r', '$c = require $argv[1]; if (($c["db_name"] ?
   cwd: root, stdio: 'inherit', windowsHide: true,
 });
 if (check.status !== 0) throw new Error('E2E requires news_blog_cms_test and matching base_path.');
+const fixture = spawnSync(php, [path.join(root, 'tests/support/reset-database.php'), '--e2e'], {
+  cwd: root, stdio: 'inherit', windowsHide: true,
+});
+if (fixture.status !== 0) throw new Error('Could not prepare the isolated E2E fixture.');
 const server = spawn(php, ['-S', target.host, 'scripts/router.php'], {
   cwd: root, stdio: 'inherit', windowsHide: true,
   env: { ...process.env, CMS_CONFIG: configPath },

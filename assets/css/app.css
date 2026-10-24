@@ -76,8 +76,8 @@
   --space-12: 80px;
 
   /* === Typography Scale === */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Lora', 'Merriweather', 'Times New Roman', serif;
+  --font-sans: 'Segoe UI', Arial, sans-serif;
+  --font-serif: Cambria, Georgia, 'Times New Roman', serif;
   --font-mono: var(--font-sans);
 
   /* === Transition === */
@@ -434,6 +434,7 @@ small {
 
 .category-strip {
   display: flex;
+  flex-wrap: wrap;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   margin: var(--space-3) 0 var(--space-8);
@@ -447,6 +448,7 @@ small {
 
 .category-strip a {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: var(--space-5);
   transition: color var(--transition-fast);
@@ -1825,10 +1827,10 @@ summary {
   .home-intro { gap: var(--space-9); }
   .auth-layout { gap: var(--space-9); }
   .profile-link {
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -1895,7 +1897,7 @@ summary {
   .brand { font-size: 26px; }
   .brand-mark { display: none; }
   .profile-link {
-    max-width: 75px;
+    max-width: none;
     font-size: 10px;
   }
   .account-nav { gap: var(--space-2); }
@@ -2306,9 +2308,17 @@ summary {
   .account-nav { flex-wrap: wrap; justify-content: flex-end; }
   .account-nav .btn, .account-nav > a { font-size: 0.75rem; }
   .header-row > .brand { flex: 1 0 100%; }
-  .header-row > .account-nav { margin-left: 0; }
+  .header-row > .account-nav { margin-left: 0; width: 100%; justify-content: flex-start; }
+  .account-nav > .profile-link { flex: 1 0 100%; justify-content: flex-start; }
   .main-nav { justify-content: space-between; gap: var(--space-2); }
   .story-grid { grid-template-columns: minmax(0, 1fr); }
   .auth-card { width: 100%; }
   .story-meta { flex-wrap: wrap; }
+}
+
+/* Native file controls need explicit colors; axe does not inspect this pseudo-element. */
+.form-control::file-selector-button,
+.form-control:hover:not(:disabled):not([readonly])::file-selector-button {
+  color: var(--text-primary);
+  background-color: var(--bg-elevated);
 }
