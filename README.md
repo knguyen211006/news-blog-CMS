@@ -1,156 +1,165 @@
 # Góc Nhìn — CMS tin tức và blog đa tác giả
 
-Ứng dụng PHP MVC thuần với MySQL/MariaDB, giao diện tiếng Việt và URL chạy dưới `/news-blog-cms/`. Không cần Composer, npm, CDN hay dịch vụ bên ngoài.
+Đồ án môn BackEnd1 — Nhóm 6 — Đề tài 4: Hệ thống quản lý tin tức và blog multi-author (CMS thu nhỏ).
 
-## 1. Thư mục làm việc và cách mở dự án
+Ứng dụng viết bằng **PHP MVC thuần** (không framework), kết nối MySQL/MariaDB qua PDO, giao diện tiếng Việt. Khi vận hành không cần Composer, npm, CDN hay dịch vụ bên ngoài; font dùng font có sẵn của hệ điều hành (Segoe UI, Cambria).
 
-Mở thư mục sau bằng **Antigravity → Open Folder**:
+Repository: *(điền đường dẫn GitHub/GitLab của nhóm sau khi đẩy mã nguồn)*
 
-`C:\Users\Nguyen\Documents\news-blog-cms-dev`
+## 1. Thành viên và phân công
 
-Đây là bản mã nguồn dùng để chỉnh sửa. Các vị trí liên quan có mục đích khác nhau:
+| Thành viên | Vai trò | Phụ trách |
+|---|---|---|
+| Nguyễn Khôi Nguyên | Trưởng nhóm | Khung MVC, xác thực, phân quyền, quản lý tài khoản; tích hợp, README |
+| Nguyễn Trí Phong | Thành viên | Giao diện công khai, tìm kiếm, lọc, đếm lượt xem |
+| Nguyễn Lê Duy Ân | Thành viên | Soạn bài, ảnh đại diện, CRUD bài viết, gửi duyệt |
+| Lê Tuấn Quy | Thành viên | Duyệt bài, chuyên mục, thẻ, dashboard |
+| Võ Tấn Tài | Thành viên | Bình luận phân cấp, kiểm duyệt; điều phối kiểm thử, dữ liệu demo |
 
-| Đường dẫn | Mục đích |
+## 2. Chức năng chính
+
+- **Khách:** xem bài đã xuất bản, lọc theo chuyên mục và thẻ, tìm kiếm theo tiêu đề/tóm tắt, phân trang.
+- **Độc giả (USER):** đăng ký, đăng nhập, bình luận và trả lời (2 cấp), ẩn bình luận của mình, cập nhật hồ sơ.
+- **Tác giả (AUTHOR):** soạn bài bằng trình soạn thảo rich text (Pell), tải ảnh đại diện, gắn chuyên mục và thẻ, lưu nháp, xem trước, gửi duyệt, xóa mềm.
+- **Quản trị (ADMIN):** duyệt hoặc trả bài (kèm lý do), gỡ bài đã xuất bản, quản lý chuyên mục/thẻ, kiểm duyệt bình luận, cấp quyền và khóa/mở khóa tài khoản, xem dashboard.
+- **Lượt xem:** tăng khi khách mở bài đã xuất bản, mỗi phiên chỉ tính một lần cho mỗi bài; xem trước không làm tăng.
+
+### Vòng đời bài viết
+
+`draft` → (gửi duyệt) → `pending` → (Admin duyệt) → `published`, hoặc (Admin trả kèm lý do) → `rejected` → tác giả sửa và gửi lại.
+
+- Bài `pending` không được sửa. Bài `published` không sửa trực tiếp: Admin gỡ về `draft` trước.
+- Xóa mềm giữ lại lịch sử và bình luận; bài đã xóa không hiện công khai.
+- Mỗi lần cập nhật tăng số phiên bản (`version`); thao tác trên dữ liệu đã cũ hoặc duyệt trùng bị từ chối bằng HTTP 409.
+
+### Giới hạn dữ liệu (validation phía server)
+
+| Trường | Quy tắc |
 |---|---|
-| `C:\Users\Nguyen\Documents\news-blog-cms-dev` | Mã nguồn làm việc; sửa và kiểm thử trong Antigravity |
-| `C:\xampp\htdocs\news-blog-cms` | Bản Apache/XAMPP đang chạy tại `http://localhost/news-blog-cms/` |
-| `C:\Users\Nguyen\Documents\news-blog-cms-submission-20261023-v2.zip` | Gói nộp đã tạo trước đó; không chỉnh sửa trực tiếp |
+| Tiêu đề bài | 5–200 ký tự |
+| Tóm tắt | 0–500 ký tự khi lưu nháp; 10–500 ký tự khi gửi duyệt |
+| Nội dung | HTML tối đa 100.000 ký tự; văn bản sau khi lọc thẻ 30–100.000 ký tự khi gửi duyệt |
+| Lý do trả bài | 5–2.000 ký tự |
+| Bình luận | 1–2.000 ký tự, văn bản thuần |
+| Ảnh đại diện | JPEG/PNG/WebP, tối đa 2 MB, kiểm tra MIME thực tế |
 
-Ba vị trí này là các bản riêng. Thay đổi trong thư mục làm việc **không tự động** xuất hiện trên trang Apache hay trong ZIP. Hãy xem trước thay đổi bằng máy chủ phát triển, chạy test, rồi mới đồng bộ và đóng gói lại. Không chép đè cả thư mục `htdocs` vì nơi đó có cấu hình kết nối và dữ liệu runtime riêng.
+Bài chỉ gửi duyệt được khi có chuyên mục hợp lệ. Chuyên mục đang có bài không xóa được.
 
-Repository Git local nằm trong thư mục làm việc. Chưa cấu hình remote GitHub.
+## 3. Vai trò và phân quyền
 
-## 2. Yêu cầu môi trường
+| Thao tác | Khách | USER | AUTHOR | ADMIN |
+|---|---|---|---|---|
+| Đọc, tìm kiếm bài công khai | Có | Có | Có | Có |
+| Bình luận, trả lời, ẩn bình luận của mình | Không | Có | Có | Có |
+| Soạn, sửa, gửi duyệt bài | Không | Không | Bài của mình | Có |
+| Duyệt, trả, gỡ bài | Không | Không | Không | Có |
+| Quản lý chuyên mục, thẻ, bình luận, tài khoản | Không | Không | Không | Có |
 
-- Windows và PHP 8.1 trở lên; đã kiểm tra trên PHP 8.2.12.
-- Apache 2.4 và MySQL 8 hoặc MariaDB 10.4 trở lên.
-- Các PHP extension: `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session`, `openssl`.
-- Để chạy bằng Apache, bật `mod_rewrite` và `AllowOverride All` cho thư mục `htdocs`.
+Tài khoản đăng ký mới luôn là USER; chỉ Admin cấp quyền AUTHOR. Không thể hạ quyền hay khóa Admin cuối cùng.
 
-Máy phát triển hiện dùng XAMPP tại `C:\xampp`; Apache và MariaDB đang chạy. Kiểm tra CLI:
+## 4. Yêu cầu môi trường
+
+- PHP 8.1 trở lên (đã chạy trên PHP 8.2.12).
+- MySQL 8 hoặc MariaDB 10.4 trở lên (đã chạy trên MariaDB 10.4.32 của XAMPP).
+- Apache 2.4 với `mod_rewrite` và `AllowOverride All` cho thư mục chứa dự án.
+- PHP extension: `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session`, `openssl`.
+- Node.js và npm: **chỉ** cần nếu muốn chạy kiểm thử giao diện Playwright trong `e2e/`, không cần để chạy website.
+- Python 3: chỉ cần để chạy `scripts/package.py` (đóng gói).
+
+Kiểm tra nhanh PHP (đường dẫn dưới đây là mặc định của XAMPP trên Windows, đổi theo máy của bạn):
 
 ```powershell
 & 'C:\xampp\php\php.exe' -v
 & 'C:\xampp\php\php.exe' -m
 ```
 
-## 3. Cấu hình và database
+## 5. Cài đặt và chạy
 
-Các cấu hình kết nối máy local không được commit và không nằm trong ZIP nộp:
+### 5.1. Cài trên máy mới (XAMPP)
 
-- `config/example.php` là mẫu không chứa thông tin đăng nhập thật.
-- `config/local.php` kết nối database demo `news_blog_cms`.
-- `config/test.php` kết nối database riêng `news_blog_cms_test`.
-
-Trên máy mới, sao chép `config/example.php` thành `config/local.php`, rồi điền host, port, database, user và password theo MySQL/MariaDB trên máy đó. Giữ `base_path` là `/news-blog-cms`. Không đưa file `local.php` hoặc `test.php` lên Git hay gửi kèm ZIP.
-
-### Cài database demo trên máy mới
-
-1. Mở phpMyAdmin tại `http://localhost/phpmyadmin/`.
-2. Chọn **Import** và nạp `database/news_blog_cms.sql` vào database mới. Tệp SQL tự tạo database `news_blog_cms` với charset `utf8mb4`.
-3. Tạo `config/local.php` theo hướng dẫn trên với thông tin kết nối thực tế.
-4. Chạy kiểm tra:
+1. Giải nén thư mục `news-blog-cms` vào `C:\xampp\htdocs\`, sao cho tồn tại `C:\xampp\htdocs\news-blog-cms\index.php` (không để lồng thêm một cấp thư mục).
+2. Mở XAMPP Control Panel, bấm **Start** cho **Apache** và **MySQL**.
+3. Vào `http://localhost/phpmyadmin/`, chọn **Import**, nạp file `database/news_blog_cms.sql`. File này tự tạo database `news_blog_cms` (utf8mb4) cùng dữ liệu demo. Không import vào database đã có dữ liệu.
+4. Sao chép `config/example.php` thành `config/local.php`, rồi sửa host, port, tên database, user, mật khẩu theo máy. Giữ `'base_path' => '/news-blog-cms'`.
+5. Kiểm tra môi trường và kết nối:
 
 ```powershell
-Set-Location 'C:\xampp\htdocs\news-blog-cms'
+cd C:\xampp\htdocs\news-blog-cms
 & 'C:\xampp\php\php.exe' scripts/check.php
 ```
 
-Không import lại vào database đã có dữ liệu. Nếu dùng `scripts/install.php`, script sẽ dừng khi database đích đã có bảng và không ghi đè cấu hình có sẵn.
+Mọi dòng phải báo PASS.
 
-### Database đang dùng trên máy phát triển
+6. Mở `http://localhost/news-blog-cms/`.
 
-Database demo là `news_blog_cms`; database nghiệm thu là `news_blog_cms_test`. Không chạy acceptance test trên database demo. Các thông tin trong `config/local.php` và `config/test.php` chỉ dành cho máy local.
+Lưu ý: `config/local.php` và `config/test.php` chứa thông tin kết nối riêng của từng máy, **không** được commit và **không** nằm trong gói ZIP nộp. Có thể dùng `scripts/install.php` để cài tự động; script từ chối ghi đè database đã có bảng hoặc file cấu hình đã tồn tại.
 
-## 4. Tài khoản demo
+### 5.2. Tài khoản demo
 
-Các tài khoản dưới đây là tài khoản **website**, không phải tài khoản database. Mật khẩu dùng cho môi trường demo local: **`Demo@12345`**.
+Đây là tài khoản của website (bảng `users`), không phải tài khoản MySQL. Mật khẩu chung: `Demo@12345`. Chỉ dùng cho môi trường demo local.
 
-| Vai trò | Email | Tên |
+| Vai trò | Email | Họ tên |
 |---|---|---|
 | ADMIN | `admin@newsblog.local` | Nguyễn Khôi Nguyên |
 | AUTHOR | `author1@newsblog.local` | Nguyễn Lê Duy Ân |
 | AUTHOR | `author2@newsblog.local` | Nguyễn Trí Phong |
 | USER | `reader1@newsblog.local` | Lê Tuấn Quy |
-| USER | `reader2@newsblog.local` | Nguyễn Tấn Tài |
+| USER | `reader2@newsblog.local` | Võ Tấn Tài |
 
-Không sử dụng các tài khoản/mật khẩu demo trên hệ thống công khai. Tài khoản đăng ký mới có vai trò USER; Admin có thể cấp quyền AUTHOR.
+### 5.3. Các địa chỉ trang
 
-## 5. Xem trước thay đổi giao diện
+Ứng dụng dùng một front controller (`index.php`), định tuyến bằng tham số `?r=`:
 
-Để xem mã nguồn trong thư mục Documents mà không ghi đè bản Apache, chạy máy chủ PHP tích hợp với database test. Mở PowerShell tại thư mục dự án:
-
-```powershell
-Set-Location 'C:\Users\Nguyen\Documents\news-blog-cms-dev'
-$env:CMS_CONFIG = (Resolve-Path '.\config\test.php').Path
-& 'C:\xampp\php\php.exe' -S 127.0.0.1:8090 scripts/router.php
-```
-
-Giữ cửa sổ PowerShell mở và truy cập:
-
-`http://127.0.0.1:8090/news-blog-cms/`
-
-Khi kết thúc, nhấn `Ctrl+C` trong cửa sổ máy chủ. Cấu hình test giúp tránh dùng nhầm database demo, nhưng dữ liệu test vẫn có thể bị thay đổi bởi thao tác trên website.
-
-Để chạy website qua Apache/XAMPP, mở `http://localhost/news-blog-cms/`. Apache phục vụ bản trong `htdocs`, không phải thư mục Documents. Sau khi thay đổi giao diện, nên kiểm tra trên máy chủ phát triển trước; chỉ đồng bộ các file cần thiết sang `htdocs` sau khi xác nhận thay đổi.
-
-## 6. Chức năng và địa chỉ trang
-
-| Màn hình | URL trên Apache |
+| Màn hình | URL |
 |---|---|
-| Trang chủ | `http://localhost/news-blog-cms/` |
-| Danh sách/tìm kiếm | `http://localhost/news-blog-cms/index.php?r=articles` |
-| Đăng nhập | `http://localhost/news-blog-cms/index.php?r=login` |
-| Đăng ký | `http://localhost/news-blog-cms/index.php?r=register` |
-| Bài viết của tôi | `http://localhost/news-blog-cms/index.php?r=author/posts` |
-| Viết bài | `http://localhost/news-blog-cms/index.php?r=author/edit` |
-| Dashboard Admin | `http://localhost/news-blog-cms/index.php?r=admin` |
-| Duyệt bài | `http://localhost/news-blog-cms/index.php?r=admin/posts&status=pending` |
-| Kiểm duyệt bình luận | `http://localhost/news-blog-cms/index.php?r=admin/comments` |
+| Trang chủ | `/news-blog-cms/` |
+| Danh sách, tìm kiếm | `/news-blog-cms/index.php?r=articles` |
+| Chi tiết bài | `/news-blog-cms/index.php?r=article&slug={slug}` |
+| Đăng nhập, đăng ký | `/news-blog-cms/index.php?r=login`, `?r=register` |
+| Hồ sơ cá nhân | `/news-blog-cms/index.php?r=profile` |
+| Bài viết của tôi (Tác giả) | `/news-blog-cms/index.php?r=author/posts` |
+| Viết bài / sửa bài | `/news-blog-cms/index.php?r=author/edit` |
+| Dashboard Admin | `/news-blog-cms/index.php?r=admin` |
+| Duyệt bài | `/news-blog-cms/index.php?r=admin/posts&status=pending` |
+| Chuyên mục, thẻ | `/news-blog-cms/index.php?r=admin/taxonomy` |
+| Kiểm duyệt bình luận | `/news-blog-cms/index.php?r=admin/comments` |
+| Quản lý tài khoản | `/news-blog-cms/index.php?r=admin/users` |
 
-Luồng chính: AUTHOR tạo nháp, xem trước và gửi duyệt; ADMIN có thể trả bài kèm lý do hoặc xuất bản; USER gửi bình luận để ADMIN kiểm duyệt. Bài đã xuất bản cần được Admin gỡ về bản nháp trước khi sửa.
+Mở trang Admin khi chưa đăng nhập sẽ được chuyển về trang đăng nhập; người đã đăng nhập nhưng không đủ quyền nhận lỗi 403.
 
-## 7. Kiểm thử
+## 6. Kiểm thử
 
-Bộ Playwright POM cho giao diện nằm trong [`e2e/`](e2e/README.md), chạy trên
-Chromium desktop 1280px và mobile 375px, có thêm kiểm tra 768px và axe WCAG AA.
-Các biến URL/tài khoản lấy từ `e2e/.env`; máy chủ tự dùng database test riêng.
-Hướng dẫn cài và chạy, kiểm tra trạng thái rỗng và bảo toàn PHP nằm trong
-[`e2e/README.md`](e2e/README.md). Node/npm chỉ cần cho E2E, không phải để chạy CMS.
+Kiểm thử chạy trên **database riêng `news_blog_cms_test`**, không chạy trên database demo.
 
-Kết quả kiểm thử được ghi trong `docs/TEST-RESULTS.md`; hướng dẫn kiểm tra giao diện thủ công ở `docs/MANUAL-TESTS.md`. Kết quả nghiệm thu hiện được ghi nhận là **89 passed, 0 failed**, chạy trên database riêng `news_blog_cms_test`.
+### 6.1. Tạo cấu hình và database test (một lần)
 
-### Tạo cấu hình và database test trên máy mới
-
-Chỉ chạy lệnh sau khi xác nhận database `news_blog_cms_test` chưa có bảng. Lệnh `--test` tạo database test từ SQL và ghi kết nối vào `config/test.php`; script từ chối ghi đè database có bảng hoặc file cấu hình đã tồn tại:
+Chỉ chạy khi `news_blog_cms_test` chưa có bảng. Lệnh tạo database test và ghi `config/test.php`:
 
 ```powershell
-Set-Location 'C:\Users\Nguyen\Documents\news-blog-cms-dev'
+cd <thư-mục-dự-án>
 & 'C:\xampp\php\php.exe' scripts/install.php --xampp=C:\xampp --test
 ```
 
-Lệnh này cần quyền quản trị database để tạo database và tài khoản ứng dụng test. Nếu phpMyAdmin không dùng xác thực `config`, hãy xem hướng dẫn biến môi trường và cách cài trong `scripts/install.php`; không thay đổi thông tin xác thực MySQL chỉ để chạy test.
+### 6.2. Kiểm thử chấp nhận PHP (acceptance)
 
-### Chạy bộ acceptance
-
-Mở PowerShell thứ nhất:
+Terminal 1, khởi động máy chủ test:
 
 ```powershell
-Set-Location 'C:\Users\Nguyen\Documents\news-blog-cms-dev'
+cd <thư-mục-dự-án>
 $env:CMS_CONFIG = (Resolve-Path '.\config\test.php').Path
 & 'C:\xampp\php\php.exe' -S 127.0.0.1:8089 scripts/router.php
 ```
 
-Mở PowerShell thứ hai:
+Terminal 2, chạy bộ kiểm thử:
 
 ```powershell
-Set-Location 'C:\Users\Nguyen\Documents\news-blog-cms-dev'
+cd <thư-mục-dự-án>
 & 'C:\xampp\php\php.exe' tests/acceptance.php 'http://127.0.0.1:8089/news-blog-cms/'
 ```
 
-Chỉ chạy acceptance với `config/test.php` và `news_blog_cms_test`; test tạo dữ liệu trong database test. Không sao chép cấu hình local sang test và tuyệt đối không chạy bộ test trên database demo hay database sản xuất. Nhấn `Ctrl+C` để dừng máy chủ.
+Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Kết quả chi tiết ở lần chạy gần nhất: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
 
-Kiểm tra cú pháp PHP:
+### 6.3. Kiểm tra cú pháp PHP
 
 ```powershell
 Get-ChildItem app,config,scripts,tests -Recurse -Filter *.php |
@@ -158,76 +167,94 @@ Get-ChildItem app,config,scripts,tests -Recurse -Filter *.php |
 & 'C:\xampp\php\php.exe' -l index.php
 ```
 
-## 8. Bảo vệ và tải file
+### 6.4. Kiểm thử giao diện Playwright (tùy chọn)
 
-Apache dùng `.htaccess` để tắt directory listing và chặn file/thư mục nội bộ. Các đường dẫn cấu hình, mã nguồn, SQL, log và tài liệu riêng không được phục vụ trực tiếp. Thư mục `uploads` không cho phép thực thi script; ứng dụng xác thực loại MIME và giới hạn kích thước ảnh.
+Bộ Playwright theo mô hình Page Object nằm trong `e2e/`, chạy trên Chromium desktop 1280px và mobile 375px; địa chỉ và tài khoản đọc từ `e2e/.env` (sao chép từ `e2e/.env.example`). Hướng dẫn cài đặt và chạy: xem `e2e/README.md`. Kết quả ghi trong `docs/TEST-RESULTS.md`.
 
-Khi kiểm tra trên Apache, các URL sau phải trả 403 hoặc 404 và không để lộ nội dung:
+Kiểm tra thủ công trên trình duyệt: `docs/MANUAL-TESTS.md`.
 
-- `/news-blog-cms/config/local.php`
-- `/news-blog-cms/.gitignore`
-- `/news-blog-cms/README.md`
-- `/news-blog-cms/database/`
-- `/news-blog-cms/vendor/`
-- `/news-blog-cms/storage/`
+## 7. Xem trước giao diện không ảnh hưởng database demo
 
-## 9. Cấu trúc và tài liệu
+Khi chỉnh giao diện, có thể chạy máy chủ PHP tích hợp với database test, không cần chép sang Apache:
+
+```powershell
+cd <thư-mục-dự-án>
+$env:CMS_CONFIG = (Resolve-Path '.\config\test.php').Path
+& 'C:\xampp\php\php.exe' -S 127.0.0.1:8090 scripts/router.php
+```
+
+Mở `http://127.0.0.1:8090/news-blog-cms/`. Dữ liệu test vẫn có thể bị thay đổi khi thao tác trên website.
+
+## 8. Bảo mật
+
+- **SQL injection:** mọi truy vấn dùng PDO prepared statements.
+- **XSS:** nội dung thường được escape khi hiển thị; nội dung rich text lọc bằng HTML Purifier theo danh sách thẻ cho phép (loại `<script>`, `<iframe>`, thuộc tính sự kiện, URL `javascript:`); bình luận là văn bản thuần.
+- **CSRF:** mọi thao tác ghi dữ liệu dùng POST và kiểm tra token; thiếu token trả HTTP 419; GET không thay đổi dữ liệu.
+- **Phiên đăng nhập:** đổi session ID sau khi đăng nhập; cookie `HttpOnly`, `SameSite=Lax`; kiểm tra lại trạng thái tài khoản ở mỗi yêu cầu nên tài khoản bị khóa mất quyền ngay. Mật khẩu được băm, không lưu dạng thuần.
+- **Giới hạn tần suất:** đăng nhập sai nhiều lần và bình luận liên tiếp bị chặn bằng HTTP 429.
+- **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; thư mục `uploads/` không cho thực thi PHP.
+- **Apache `.htaccess`:** tắt liệt kê thư mục; chặn truy cập trực tiếp vào cấu hình, mã nguồn, SQL, log, tài liệu. Các URL sau phải trả 403 hoặc 404 và không lộ nội dung:
+  - `/news-blog-cms/config/local.php`
+  - `/news-blog-cms/.gitignore`
+  - `/news-blog-cms/README.md`
+  - `/news-blog-cms/database/`
+  - `/news-blog-cms/vendor/`
+  - `/news-blog-cms/storage/`
+
+## 9. Cơ sở dữ liệu
+
+Có 8 bảng InnoDB, charset utf8mb4: `users`, `categories`, `tags`, `posts`, `post_tags` (quan hệ nhiều–nhiều bài viết và thẻ), `comments` (tự tham chiếu `parent_id` cho trả lời), `post_history` (nhật ký thao tác trên bài viết), `rate_limits` (đếm giới hạn tần suất). Cấu trúc ở `database/schema.sql`; dữ liệu demo (5 tài khoản, 4 chuyên mục, 6 thẻ, 12 bài, 6 bình luận) ở `database/news_blog_cms.sql`. Chi tiết thiết kế: `docs/ARCHITECTURE.md`.
+
+## 10. Cấu trúc thư mục
 
 ```text
 news-blog-cms/
 ├── index.php                 Front controller
+├── .htaccess                 Chặn file nội bộ, tắt liệt kê thư mục
 ├── app/
-│   ├── Core/                 PDO, Auth, Security, View, HTTP errors
+│   ├── bootstrap.php, helpers.php
+│   ├── Core/                 DB, Auth, Security, View, HttpException
 │   ├── Controllers/          Auth, Public, Post, Admin, Comment
 │   ├── Models/               User, Post, Taxonomy, Comment
-│   └── Views/                Layout, auth, public, posts, admin
-├── assets/                   CSS, JavaScript, ảnh SVG và thư viện giao diện
-├── config/                   example.php, routes.php; local/test là cấu hình riêng
-├── database/                 Schema và dữ liệu demo
-├── docs/                     Kiến trúc, kiểm thử và hướng dẫn thủ công
-├── scripts/                  Cài đặt, kiểm tra, định tuyến và đóng gói
+│   └── Views/                Layout, auth, public, posts, admin, partials
+├── assets/                   CSS, JavaScript, ảnh SVG, thư viện soạn thảo Pell
+├── config/                   example.php, routes.php (local.php và test.php là cấu hình riêng, không nộp)
+├── database/                 schema.sql, news_blog_cms.sql
+├── docs/                     Kiến trúc, chức năng, kết quả kiểm thử, kiểm thử thủ công, môi trường
+├── e2e/                      Kiểm thử giao diện Playwright (tùy chọn)
+├── scripts/                  install.php, check.php, router.php, package.py
 ├── storage/                  Session, cache, log
-├── tests/                    Acceptance và HTTP smoke test
+├── tests/                    acceptance.php, view-contract.php, view-states.php, support/
 ├── uploads/                  Ảnh tải lên
 └── vendor/htmlpurifier/      Thư viện lọc HTML
 ```
 
-- `docs/ARCHITECTURE.md`: kiến trúc và mô hình dữ liệu.
-- `docs/FEATURES.md`: chức năng và phạm vi.
-- `docs/TEST-RESULTS.md`: kết quả kiểm thử.
-- `docs/MANUAL-TESTS.md`: checklist kiểm thử trên trình duyệt.
-- `docs/ENVIRONMENT.md`: ghi chú môi trường và giới hạn đã biết.
-- `THIRD-PARTY-NOTICES.md`: nguồn và giấy phép thư viện.
-- `docs/FILE-LIST.txt`: manifest file bàn giao.
+Tài liệu: `docs/ARCHITECTURE.md` (kiến trúc, bảng dữ liệu), `docs/FEATURES.md` (chức năng, phạm vi), `docs/TEST-RESULTS.md` (kết quả kiểm thử), `docs/MANUAL-TESTS.md` (kiểm thử thủ công), `docs/ENVIRONMENT.md` (môi trường, giới hạn đã biết), `docs/FILE-LIST.txt` (danh sách file bàn giao), `THIRD-PARTY-NOTICES.md` (giấy phép thư viện).
 
-## 10. Git và đóng gói
+## 11. Git và đóng gói
 
-File `config/local.php`, `config/test.php`, dữ liệu session/log, ảnh upload runtime và kết quả JSON được loại khỏi Git hoặc ZIP đóng gói. Trước khi commit, kiểm tra `git status` và không stage cấu hình hay dữ liệu riêng.
+`config/local.php`, `config/test.php`, `e2e/.env`, `node_modules/`, trình duyệt của Playwright, session, log, ảnh upload và kết quả kiểm thử dạng JSON được loại khỏi Git và gói nộp. Trước khi commit, kiểm tra `git status` để không đưa cấu hình riêng vào.
 
-Tạo ZIP mới bằng Python có sẵn trong Windows, với đường dẫn output chưa tồn tại:
+Tạo gói nộp (đường dẫn output phải chưa tồn tại, script không ghi đè):
 
 ```powershell
-Set-Location 'C:\Users\Nguyen\Documents\news-blog-cms-dev'
-python scripts/package.py --output 'C:\Users\Nguyen\Documents\news-blog-cms-submission-new.zip'
+cd <thư-mục-dự-án>
+python scripts/package.py --output '<đường-dẫn>\news-blog-cms-submission.zip'
+Get-FileHash '<đường-dẫn>\news-blog-cms-submission.zip' -Algorithm SHA256
 ```
 
-Script từ chối ghi đè file ZIP đã tồn tại. Gói nộp không chứa `.git`, `config/local.php`, `config/test.php`, session, log, ảnh upload runtime hoặc kết quả JSON. Sau khi tạo gói, xác nhận file tồn tại, kiểm tra nội dung và tính SHA-256:
+Sau khi tạo, mở thử ZIP để xác nhận không có `config/local.php`, `config/test.php`, `.git`; rồi giải nén vào thư mục sạch, làm theo mục 5.1 để chắc chắn cài từ ZIP chạy được.
 
-```powershell
-Get-FileHash 'C:\Users\Nguyen\Documents\news-blog-cms-submission-new.zip' -Algorithm SHA256
-```
+## 12. Xử lý sự cố
 
-Không nộp ZIP local chứa cấu hình máy hoặc một bản ZIP cũ có tên gần giống.
-
-## 11. Xử lý sự cố
-
-- **404:** kiểm tra vị trí `index.php`, tên thư mục và việc giải nén có bị lồng thư mục hay không.
-- **CSS/ảnh không tải:** kiểm tra `base_path` là `/news-blog-cms` và URL tài nguyên.
+- **404:** kiểm tra `index.php` nằm trực tiếp trong `news-blog-cms` (không bị lồng hai cấp), và Apache có `AllowOverride All`, `mod_rewrite` bật.
+- **Mất CSS hoặc ảnh:** kiểm tra `'base_path' => '/news-blog-cms'` trong `config/local.php`; thử mở `http://localhost/news-blog-cms/assets/css/app.css`.
 - **503 chưa cấu hình:** tạo `config/local.php` từ `config/example.php`.
 - **500:** xem `storage/app.log`; không bật hiển thị lỗi ra trình duyệt.
-- **Không kết nối database:** kiểm tra MySQL/MariaDB đang chạy và xác minh host, port, database, user, password.
-- **419 CSRF:** tải lại form và kiểm tra cookie/quyền ghi thư mục session.
-- **409:** dữ liệu vừa được thay đổi ở phiên khác; tải lại trước khi thao tác.
+- **Không kết nối được database:** kiểm tra MySQL đang chạy; xác minh host, port, tên database, user, mật khẩu.
+- **419:** tải lại trang để lấy token mới; kiểm tra quyền ghi thư mục `storage/`.
+- **409:** dữ liệu vừa được thay đổi ở phiên khác; tải lại rồi thao tác lại.
 - **429:** đã chạm giới hạn đăng nhập hoặc bình luận; chờ rồi thử lại.
-- **Upload thất bại:** dùng ảnh JPEG/PNG/WebP hợp lệ, tối đa 2 MB và kiểm tra quyền ghi `uploads`.
-- **Lỗi Aria hoặc bảng quyền MySQL:** sao lưu và nhờ quản trị viên XAMPP xử lý; không xóa `mysql/data` hoặc tự sửa bảng hệ thống.
+- **Upload thất bại:** dùng ảnh JPEG/PNG/WebP hợp lệ, tối đa 2 MB; kiểm tra quyền ghi `uploads/`.
+- **Tiêu đề tiếng Việt bị tách dấu:** nhấn `Ctrl+F5` để xóa cache CSS. Giao diện dùng font hệ thống Cambria (tiêu đề) và Segoe UI (nội dung) có sẵn trên Windows; trên máy không có các font này, trình duyệt dùng font dự phòng nên hình dạng chữ có thể khác.
+- **Lỗi bảng Aria hoặc bảng quyền của MySQL:** xem `docs/ENVIRONMENT.md`; sao lưu trước, không xóa `mysql/data`.
