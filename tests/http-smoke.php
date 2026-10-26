@@ -13,7 +13,7 @@ $tests=[
  'index.php?r=article&slug=nhat-ky-hoc-sql'=>404,
  'index.php?r=login'=>200,
  'index.php?r=register'=>200,
- 'index.php?r=admin'=>401,
+ 'index.php?r=admin'=>303,
  'assets/css/app.css'=>200,
  'assets/js/app.js'=>200,
  'assets/vendor/bootstrap/bootstrap.min.css'=>200,
@@ -36,18 +36,31 @@ $tests=[
  '.env'=>403,
  'README.md'=>403,
  'uploads/fake.php'=>403,
+ 'config/test.php'=>403,
+ 'database/schema.sql'=>403,
+ 'storage/sessions/'=>403,
+ 'app/Models/Post.php'=>403,
+ 'e2e/.env'=>403,
+ 'e2e/.auth/admin.json'=>403,
+ '.htaccess'=>403,
 ];
 $rows=[];$failed=0;$root=dirname(__DIR__);
 foreach($tests as $path=>$expect){
  $ch=curl_init($base.$path);
- curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_TIMEOUT=>10]);
+ $location='';
+ curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_TIMEOUT=>10,
+  CURLOPT_HEADERFUNCTION=>static function($curl,string $header)use(&$location):int{
+   if(stripos($header,'Location:')===0)$location=trim(substr($header,9));
+   return strlen($header);
+  }]);
  $body=curl_exec($ch);$status=(int)curl_getinfo($ch,CURLINFO_RESPONSE_CODE);$error=curl_error($ch);curl_close($ch);
- $ok=$status===$expect;
+ $ok=$status===$expect&&$error==='';
+ if($path==='index.php?r=admin')$ok=$ok&&$location==='/news-blog-cms/index.php?r=login';
  if(!$ok)$failed++;
  $rows[]=[$path?:'/',$expect,$status,$ok?'PASS':'FAIL'];
- echo ($ok?'PASS':'FAIL')." $path expected=$expect actual=$status".($error?' '.$error:'').PHP_EOL;
+ echo ($ok?'PASS':'FAIL')." $path expected=$expect actual=$status".($location?' location='.$location:'').($error?' '.$error:'').PHP_EOL;
 }
-$md="# Kiểm tra URL và tài nguyên sau bàn giao\n\nThời điểm: ".date(DATE_ATOM)."\n\nURL kiểm tra: $base\n\n".(count($rows)-$failed)." PASS / $failed FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt.\n\n| Đường dẫn | Mong đợi | HTTP thực tế | Kết quả |\n|---|---|---|---|\n";
+$md="# Kiểm tra URL và tài nguyên sau bàn giao\n\nThời điểm: ".date(DATE_ATOM)."\n\nĐích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.\n\n".(count($rows)-$failed)." PASS / $failed FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt; không xác minh Apache .htaccess.\n\n| Đường dẫn | Mong đợi | HTTP thực tế | Kết quả |\n|---|---|---|---|\n";
 foreach($rows as $r)$md.='| '.implode(' | ',$r)." |\n";
 file_put_contents($root.'/docs/HANDOFF-VERIFICATION.md',$md);
 echo (count($rows)-$failed)." passed, $failed failed\n";

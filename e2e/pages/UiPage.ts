@@ -26,7 +26,7 @@ export class UiPage {
     const input = this.page.getByTestId('post-cover-input');
     for (const hover of [false, true]) {
       if (hover) await input.hover();
-      const ratio = await input.evaluate(element => {
+      const measurement = await input.evaluate(element => {
         const style = getComputedStyle(element, '::file-selector-button');
         const luminance = (color: string) => {
           const channels = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map(v => v / 255)
@@ -34,9 +34,11 @@ export class UiPage {
           return channels.reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
         };
         const a = luminance(style.color), b = luminance(style.backgroundColor);
-        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        return { foreground: style.color, background: style.backgroundColor,
+          ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) };
       });
-      expect(ratio).toBeGreaterThanOrEqual(4.5);
+      console.log('File selector contrast:', JSON.stringify({ hover, ...measurement }));
+      expect(measurement.ratio).toBeGreaterThanOrEqual(4.5);
     }
   }
   async expectReadableLinks(links: import('@playwright/test').Locator) {

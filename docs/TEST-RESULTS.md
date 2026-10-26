@@ -1,4 +1,34 @@
-# Kết quả kiểm thử HTTP + MariaDB
+# Kiểm chứng Giai đoạn C — đang bị chặn ở kết nối database
+
+Lần kiểm tra ngày 25/10/2026 chỉ dùng cấu hình `config/test.php` cho
+`news_blog_cms_test`. Kết nối bị từ chối với SQLSTATE/driver code **1045**,
+kể cả khi chạy ngoài sandbox. Chưa thể xác nhận bản dev đủ điều kiện nộp.
+Không sửa thông tin xác thực, Controllers/Models hoặc font.
+
+| Kiểm tra hiện tại | Lệnh / bằng chứng | Kết quả |
+|---|---|---|
+| PHP lint | `php -l` từng file PHP trong `git ls-files`, rồi hai config riêng (chỉ kiểm tra cú pháp) | 288 file tracked + 2 config = 290 file, 0 lỗi; mã dự án 48 file, vendor 242 file |
+| TypeScript | `npm.cmd run typecheck` trong `e2e/` | Exit 0, kể cả sau khi thêm output tương phản |
+| View contract | `php tests/view-contract.php` | `Missing original contracts: 0` sau khi sửa so sánh ký tự xuống dòng trong token mở PHP |
+| Chốt fixture | Bản sao fixture trong thư mục tạm, cấu hình tên giả `cms_wrong_name_probe` | Từ chối trước PDO: `Refusing to reset anything except local news_blog_cms_test.`, exit 255 |
+| scripts/check.php | `CMS_CONFIG=config/test.php` | 7 extension `OK`, PHP 8.2.12; exit 1 trước phần database; chưa có output số bản ghi/Purifier |
+| Acceptance | Chưa chạy do kết nối bị từ chối | Chưa xác minh |
+| View states | Chưa chạy do kết nối bị từ chối | Chưa xác minh |
+| Playwright ba lần liên tiếp | Chưa chạy; không reset thủ công | Chưa xác minh |
+| HTTP 39 ca | Đã cập nhật script, `php -l` không lỗi; chưa chạy HTTP | Chưa xác minh |
+| Nút chọn file trong Dark mode | Đã thêm output màu và tỷ lệ vào Playwright; chưa có phép đo trình duyệt | Chưa xác minh, không sửa CSS |
+| Quét E2E | `pages/`, `tests/`, `support/`, `playwright.config.ts` | Không có fixed sleep, XPath tuyệt đối hoặc URL/tài khoản test viết cứng; đọc qua dotenv và `support/env.ts` |
+| Danh sách file | So sánh `docs/FILE-LIST.txt` với `git ls-files` | Khớp đúng 484 đường dẫn |
+
+Lỗi View contract ban đầu là 1 chênh lệch giả: `T_OPEN_TAG` giữ CRLF của
+working tree, còn Git HEAD dùng LF. Bộ so sánh giờ bỏ khoảng trắng cuối token
+mở PHP; không sửa View hay hợp đồng backend.
+
+Chưa xác minh lại quy tắc Apache `.htaccess`, cài đặt trên bộ XAMPP mới,
+kiểm thử ZIP, hay các kết quả accessibility/E2E lịch sử trong
+`UX-UI-VERIFICATION.md`. PHP router không thay thế kiểm thử Apache.
+
+## Biên bản acceptance lịch sử — không phải kết quả chạy lại Giai đoạn C
 
 Thời điểm: 2026-10-24T10:54:03+07:00
 

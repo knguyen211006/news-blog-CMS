@@ -7,7 +7,8 @@ function canon(string $code): string {
     foreach (token_get_all($code) as $token) {
         if (is_array($token)) {
             if (in_array($token[0], [T_WHITESPACE,T_COMMENT,T_DOC_COMMENT,T_INLINE_HTML], true)) continue;
-            $out .= $token[1];
+            // T_OPEN_TAG includes its trailing newline (CRLF in a Windows checkout).
+            $out .= $token[0] === T_OPEN_TAG ? rtrim($token[1]) : $token[1];
         } else $out .= $token;
     }
     return trim($out);
