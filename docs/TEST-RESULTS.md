@@ -1,41 +1,47 @@
-# Kiểm chứng Giai đoạn C — đang bị chặn ở kết nối database
+# Kiểm chứng Giai đoạn C — 26/10/2026
 
-Lần kiểm tra ngày 26/10/2026 chỉ dùng cấu hình `config/test.php` cho
-`news_blog_cms_test`. Kết nối bị từ chối với SQLSTATE/driver code **1045**,
-kể cả khi chạy ngoài sandbox. Phép thử PDO chỉ-đọc `SELECT 1` chưa thực thi
-được vì kết nối bị từ chối (exit 1 ở cả hai lần). Chưa chạy các bộ test dùng
-database sau phép thử này. Chưa thể xác nhận bản dev đủ điều kiện nộp.
-Không sửa thông tin xác thực, Controllers/Models hoặc font.
+Kết nối đã được xác nhận trước mọi test dùng database bằng lệnh PDO chỉ-đọc:
+`database=news_blog_cms_test; SELECT 1 = 1` (exit 0). Lỗi xác thực 1045 trước
+đây không còn tái hiện trong lượt này. Các bộ test ứng dụng dưới đây chỉ chạy
+trên `news_blog_cms_test`; không truy cập htdocs hoặc database demo.
 
-| Kiểm tra hiện tại | Lệnh / bằng chứng | Kết quả |
+| Kiểm tra | Bằng chứng thực tế | Kết quả |
 |---|---|---|
-| PHP lint | `php -l` từng file PHP trong `git ls-files`, hai config riêng và script PDO tạm (chỉ kiểm tra cú pháp) | 288 file tracked + 2 config + 1 script tạm = 291 file, 0 lỗi; tracked gồm mã dự án 46 file, vendor 242 file; script tạm được xóa sau kiểm tra |
-| TypeScript | `npm.cmd run typecheck` trong `e2e/` | Chạy lại 26/10: exit 0 |
-| View contract | `php tests/view-contract.php` | `Missing original contracts: 0` sau khi sửa so sánh ký tự xuống dòng trong token mở PHP |
-| Chốt fixture (lịch sử 25/10, không chạy lại) | Bản sao fixture trong thư mục tạm, cấu hình tên giả `cms_wrong_name_probe` | Từ chối trước PDO: `Refusing to reset anything except local news_blog_cms_test.`, exit 255 |
-| scripts/check.php | Chưa chạy lại 26/10 do chưa qua cổng kiểm tra kết nối | Lịch sử 25/10: 7 extension `OK`, PHP 8.2.12; exit 1 trước phần database; chưa có output số bản ghi/Purifier |
-| Acceptance | Chưa chạy do kết nối bị từ chối | Chưa xác minh |
-| View states | Chưa chạy do kết nối bị từ chối | Chưa xác minh |
-| Playwright ba lần liên tiếp | Chưa chạy; không reset thủ công | Chưa xác minh |
-| HTTP 39 ca | Đã cập nhật script, `php -l` không lỗi; chưa chạy HTTP | Chưa xác minh |
-| Nút chọn file trong Dark mode | Đã thêm output màu và tỷ lệ vào Playwright; chưa có phép đo trình duyệt | Chưa xác minh, không sửa CSS |
-| Quét E2E | `pages/`, `tests/`, `support/`, `playwright.config.ts`; mẫu `waitForTimeout`, `xpath=`, `/html/`, `/html[` | Chạy lại 26/10: 0 kết quả (rg exit 1 = không khớp) |
-| Danh sách file | So sánh `docs/FILE-LIST.txt` với `git ls-files` | Khớp đúng 484 đường dẫn |
-| ZIP dev v1 | Chưa tạo khi cổng kiểm tra database chưa đạt | Chưa xác minh nội dung ZIP, cài trên `news_blog_cms_zipcheck`, trang chủ, reader2 hoặc SHA-256 |
+| Nút chọn file, `author/edit`, Dark mode | Playwright đọc `::file-selector-button`: chữ `rgb(232, 236, 244)`, nền `rgb(30, 38, 66)`, tỷ lệ **12.568519752431673:1**; thường/hover, desktop/mobile đều giống nhau; axe không có violation trong các ca editor | Đạt >= 4.5:1, không sửa CSS/font |
+| PHP lint | `php -l`: 288 file tracked (46 mã dự án, 242 vendor) + 2 config riêng = **290 file, 0 lỗi** | Exit 0 |
+| Acceptance | `php tests/acceptance.php http://127.0.0.1:8089/news-blog-cms/` | **89 PASS / 0 FAIL**, exit 0; bảng chi tiết bên dưới |
+| View-contract | `php tests/view-contract.php` → `Missing original contracts: 0` | Exit 0 |
+| View-states | `php tests/view-states.php` → 10 ca render, **12 trạng thái rỗng**, không có PHP warning, không thay đổi database | Exit 0 |
+| Check | `CMS_CONFIG=config/test.php`, `php scripts/check.php` | 7 extension OK; PHP 8.2.12; MariaDB 10.4.32; HTML Purifier: `<p>safe</p>`; exit 0 |
+| Dữ liệu khi chạy check sau acceptance | users=6, categories=4, tags=6, posts=14, comments=8 | Số thực tế sau test, không phải seed ban đầu |
+| E2E typecheck | `npm.cmd run typecheck` | Exit 0 |
+| E2E lượt 1 | `npm.cmd test`, 1 setup + 21 desktop + 21 mobile | **43 passed / 0 failed**, 30.0s, exit 0 |
+| E2E lượt 2 | Cùng lệnh, fixture tự dọn và nạp lại | **43 passed / 0 failed**, 30.4s, exit 0 |
+| E2E lượt 3 | Cùng lệnh, fixture tự dọn và nạp lại | **43 passed / 0 failed**, 30.2s, exit 0 |
+| HTTP smoke | `php tests/http-smoke.php http://127.0.0.1:8089/news-blog-cms/` | **39 passed / 0 failed**, exit 0; chi tiết ở `HANDOFF-VERIFICATION.md` |
+| Quét E2E | `pages/`, `tests/`, `support/`, `playwright.config.ts`; mẫu `waitForTimeout`, `xpath=`, `/html/`, `/html[` | **0 kết quả** (rg exit 1 = không khớp) |
+| Gói thử trước khi chốt ZIP | 484 file; CRC OK; khớp chính xác `docs/FILE-LIST.txt`; đủ README, SQL, example config, HTML Purifier, tests/support | Không có cấu hình riêng, .env, node_modules, .browsers, .git, tests/results, session/log, upload thử, GEMINI/ux-ui-automation |
+| Cài từ ZIP vào database tạm | Tạo `news_blog_cms_zipcheck` bằng tài khoản test bị từ chối với **1044** (không đủ quyền), khác lỗi xác thực 1045 đã hết | Chưa xác minh cài sạch, trang chủ và reader2 từ ZIP; thư mục giải nén thử đã dọn |
 
-Lỗi View contract ban đầu là 1 chênh lệch giả: `T_OPEN_TAG` giữ CRLF của
-working tree, còn Git HEAD dùng LF. Bộ so sánh giờ bỏ khoảng trắng cuối token
-mở PHP; không sửa View hay hợp đồng backend.
+Ba lượt E2E chạy liên tiếp, không sửa mã hoặc reset thủ công giữa các lượt.
+Toàn bộ 5 ca `auth.spec.ts` trên Mobile Chrome đều đạt ở cả ba lượt; không tái
+hiện lỗi auth nên không suy đoán nguyên nhân lỗi lịch sử. Không sửa Controllers/Models.
 
-Chưa xác minh lại quy tắc Apache `.htaccess`, cài đặt trên bộ XAMPP mới,
-kiểm thử ZIP, hay các kết quả accessibility/E2E lịch sử trong
-`UX-UI-VERIFICATION.md`. PHP router không thay thế kiểm thử Apache.
+Lượt đo tương phản riêng có 3 ca đạt (gồm setup), nhưng tiến trình server không
+tự kết thúc khi chạy trong sandbox Windows. Sau khi xác định đúng cây tiến trình
+do lượt này tạo và dừng nó, Playwright báo `3 passed (3.2m)`, exit 0. Ba lượt đầy
+đủ chạy ngoài sandbox, tự kết thúc bình thường trong thời gian ghi ở bảng trên.
+Không thêm fixed sleep, không chụp lại hàng loạt ảnh.
 
-## Biên bản acceptance lịch sử — không phải kết quả chạy lại Giai đoạn C
+Phạm vi chưa xác minh: bảo vệ Apache `.htaccess` và cài trên XAMPP mới. HTTP smoke
+ở đây chỉ kiểm tra PHP router. 12 trạng thái rỗng được xác minh bằng render View
+và kiểm tra DOM (icon/nội dung/CTA), không phải 12 ảnh chụp trình duyệt.
 
-Thời điểm: 2026-10-24T10:54:03+07:00
+## Acceptance — kết quả chạy thực tế của lượt này
 
-Đích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.
+Thời điểm: 2026-10-26T15:41:26+07:00
+
+URL: http://127.0.0.1:8089/news-blog-cms/
 
 Database riêng: news_blog_cms_test. Không chạy thao tác nghiệm thu trên database demo chính.
 

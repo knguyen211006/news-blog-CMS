@@ -159,7 +159,7 @@ cd <thư-mục-dự-án>
 & 'C:\xampp\php\php.exe' tests/acceptance.php 'http://127.0.0.1:8089/news-blog-cms/'
 ```
 
-Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Biên bản 89 PASS là kết quả lịch sử; lần kiểm chứng ngày 26/10/2026 vẫn bị chặn bởi lỗi xác thực database 1045 ở phép thử kết nối chỉ-đọc, chưa chạy lại acceptance/E2E và chưa đo lại tương phản. Kết quả và phạm vi xác minh hiện tại: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
+Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Lần kiểm chứng ngày 26/10/2026 đạt **89 PASS / 0 FAIL**; Playwright ba lượt liên tiếp đều **43 passed / 0 failed**, HTTP smoke **39 passed / 0 failed**. Nút chọn file Dark mode đạt tương phản **12,5685:1** trên desktop/mobile. Kết quả và phạm vi xác minh: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
 
 ### 6.3. Kiểm tra cú pháp PHP
 
@@ -174,6 +174,8 @@ Get-ChildItem app,config,scripts,tests -Recurse -Filter *.php |
 Bộ Playwright theo mô hình Page Object nằm trong `e2e/`, chạy trên Chromium desktop 1280px và mobile 375px; địa chỉ và tài khoản đọc từ `e2e/.env` (sao chép từ `e2e/.env.example`). Hướng dẫn cài đặt và chạy: xem `e2e/README.md`. Kết quả ghi trong `docs/TEST-RESULTS.md`.
 
 Kiểm tra thủ công trên trình duyệt: `docs/MANUAL-TESTS.md`.
+
+`php tests/view-states.php` đã xác minh **12 trạng thái rỗng qua 10 ca render View** ngày 26/10/2026: không có PHP warning, mỗi trạng thái có icon/nội dung/CTA. Đây là kiểm tra DOM phía server, không phải xác minh hình ảnh của cả 12 trạng thái trên trình duyệt.
 
 ## 7. Xem trước giao diện không ảnh hưởng database demo
 

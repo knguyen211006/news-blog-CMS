@@ -1,10 +1,10 @@
 # Kiểm tra URL và tài nguyên sau bàn giao
 
-Thời điểm: 2026-10-23T17:12:35+02:00
+Thời điểm: 2026-10-26T09:46:39+01:00
 
 Đích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.
 
-32 PASS / 0 FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt.
+39 PASS / 0 FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt; không xác minh Apache .htaccess.
 
 | Đường dẫn | Mong đợi | HTTP thực tế | Kết quả |
 |---|---|---|---|
@@ -17,7 +17,7 @@ Thời điểm: 2026-10-23T17:12:35+02:00
 | index.php?r=article&slug=nhat-ky-hoc-sql | 404 | 404 | PASS |
 | index.php?r=login | 200 | 200 | PASS |
 | index.php?r=register | 200 | 200 | PASS |
-| index.php?r=admin | 401 | 401 | PASS |
+| index.php?r=admin | 303 | 303 | PASS |
 | assets/css/app.css | 200 | 200 | PASS |
 | assets/js/app.js | 200 | 200 | PASS |
 | assets/vendor/bootstrap/bootstrap.min.css | 200 | 200 | PASS |
@@ -40,3 +40,10 @@ Thời điểm: 2026-10-23T17:12:35+02:00
 | .env | 403 | 403 | PASS |
 | README.md | 403 | 403 | PASS |
 | uploads/fake.php | 403 | 403 | PASS |
+| config/test.php | 403 | 403 | PASS |
+| database/schema.sql | 403 | 403 | PASS |
+| storage/sessions/ | 403 | 403 | PASS |
+| app/Models/Post.php | 403 | 403 | PASS |
+| e2e/.env | 403 | 403 | PASS |
+| e2e/.auth/admin.json | 403 | 403 | PASS |
+| .htaccess | 403 | 403 | PASS |
