@@ -9,7 +9,7 @@ $users=[
  ['Nguyễn Lê Duy Ân','author1@newsblog.local','AUTHOR'],
  ['Nguyễn Trí Phong','author2@newsblog.local','AUTHOR'],
  ['Lê Tuấn Quy','reader1@newsblog.local','USER'],
- ['Nguyễn Tấn Tài','reader2@newsblog.local','USER'],
+ ['Võ Tấn Tài','reader2@newsblog.local','USER'],
 ];
 $sql=file_get_contents($root.'/database/schema.sql')."\nSTART TRANSACTION;\n";
 foreach ($users as $u) $sql.="INSERT INTO users(name,email,password_hash,role) VALUES (".implode(',',array_map($quote,[$u[0],$u[1],$hash,$u[2]])).");\n";

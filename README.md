@@ -22,7 +22,7 @@ Repository: https://github.com/knguyen211006/news-blog-CMS
 - **Độc giả (USER):** đăng ký, đăng nhập, bình luận và trả lời (2 cấp), ẩn bình luận của mình, cập nhật hồ sơ.
 - **Tác giả (AUTHOR):** soạn bài bằng trình soạn thảo rich text (Pell), tải ảnh đại diện, gắn chuyên mục và thẻ, lưu nháp, xem trước, gửi duyệt, xóa mềm.
 - **Quản trị (ADMIN):** duyệt hoặc trả bài (kèm lý do), gỡ bài đã xuất bản, quản lý chuyên mục/thẻ, kiểm duyệt bình luận, cấp quyền và khóa/mở khóa tài khoản, xem dashboard.
-- **Lượt xem:** tăng khi khách mở bài đã xuất bản, mỗi phiên chỉ tính một lần cho mỗi bài; xem trước không làm tăng.
+- **Lượt xem:** tính theo phiên cho từng bài đã xuất bản, với cửa sổ 1.800 giây kể từ lần tăng gần nhất; mở lại sau cửa sổ này được tính thêm một lượt. Xem trước không làm tăng.
 
 ### Vòng đời bài viết
 
@@ -88,7 +88,7 @@ cd C:\xampp\htdocs\news-blog-cms
 & 'C:\xampp\php\php.exe' scripts/check.php
 ```
 
-Mọi dòng phải báo PASS.
+Các extension cần thiết phải báo `OK`; script in phiên bản PHP và database, số bản ghi của `users`, `categories`, `tags`, `posts`, `comments`, rồi kết quả `HTML Purifier: <p>safe</p>`. Script không in `PASS` ở mọi dòng.
 
 6. Mở `http://localhost/news-blog-cms/`.
 
@@ -130,6 +130,8 @@ Mở trang Admin khi chưa đăng nhập sẽ được chuyển về trang đăn
 ## 6. Kiểm thử
 
 Kiểm thử chạy trên **database riêng `news_blog_cms_test`**, không chạy trên database demo.
+
+**Cảnh báo:** acceptance và mỗi lượt Playwright tự dọn và nạp lại database test trước khi chạy. Chỉ dùng với `news_blog_cms_test` qua `config/test.php`; dữ liệu thêm thủ công trong database test sẽ bị xóa.
 
 ### 6.1. Tạo cấu hình và database test (một lần)
 
@@ -189,7 +191,7 @@ Mở `http://127.0.0.1:8090/news-blog-cms/`. Dữ liệu test vẫn có thể b�
 
 - **SQL injection:** mọi truy vấn dùng PDO prepared statements.
 - **XSS:** nội dung thường được escape khi hiển thị; nội dung rich text lọc bằng HTML Purifier theo danh sách thẻ cho phép (loại `<script>`, `<iframe>`, thuộc tính sự kiện, URL `javascript:`); bình luận là văn bản thuần.
-- **CSRF:** mọi thao tác ghi dữ liệu dùng POST và kiểm tra token; thiếu token trả HTTP 419; GET không thay đổi dữ liệu.
+- **CSRF:** thao tác gửi form để ghi dữ liệu dùng POST và kiểm tra token; thiếu token trả HTTP 419. GET không xóa hay sửa dữ liệu nội dung; ngoại lệ là đếm lượt xem bài.
 - **Phiên đăng nhập:** đổi session ID sau khi đăng nhập; cookie `HttpOnly`, `SameSite=Lax`; kiểm tra lại trạng thái tài khoản ở mỗi yêu cầu nên tài khoản bị khóa mất quyền ngay. Mật khẩu được băm, không lưu dạng thuần.
 - **Giới hạn tần suất:** đăng nhập sai nhiều lần và bình luận liên tiếp bị chặn bằng HTTP 429.
 - **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; thư mục `uploads/` không cho thực thi PHP.

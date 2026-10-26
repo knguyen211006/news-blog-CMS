@@ -2,7 +2,7 @@
 
 Thời điểm: 2026-10-24T10:54:03+07:00
 
-URL: http://127.0.0.1:8089/news-blog-cms/
+Đích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.
 
 Database riêng: news_blog_cms_test. Không chạy thao tác nghiệm thu trên database demo chính.
 

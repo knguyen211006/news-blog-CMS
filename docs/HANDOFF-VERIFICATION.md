@@ -2,7 +2,7 @@
 
 Thời điểm: 2026-10-23T17:12:35+02:00
 
-URL kiểm tra: http://127.0.0.1:8088/news-blog-cms/
+Đích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.
 
 32 PASS / 0 FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt.
 

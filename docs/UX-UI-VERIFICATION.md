@@ -21,5 +21,4 @@ Hướng dẫn Playwright: e2e/README.md. Các bộ test dùng database test ri�
 Playwright tạo nháp rồi xóa mềm theo hành vi CMS, nên lịch sử thao tác còn trong
 news_blog_cms_test. Máy chủ tạm kiểm thử đã dừng.
 
-Kết quả đã được Gemini rà soát, nghiệm thu độc lập và tạo commit hoàn tất bàn giao.
-Tài liệu chi tiết tại GEMINI-REVIEW.md.
+Số liệu trên là biên bản lần chạy ngày 24/10/2026; kết quả chạy lại xem `TEST-RESULTS.md`.

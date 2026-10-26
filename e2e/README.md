@@ -7,7 +7,7 @@ Không cần chép mã sang XAMPP `htdocs`.
 ## Chạy trên Windows
 
 ```powershell
-Set-Location 'C:\Users\Nguyen\Documents\news-blog-cms-dev\e2e'
+Set-Location '<thư-mục-dự-án>\e2e'
 npm.cmd ci
 # Chỉ sao chép nếu chưa có .env; giữ thông tin riêng khi đã cấu hình.
 if (!(Test-Path .env)) { Copy-Item .env.example .env }

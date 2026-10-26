@@ -14,7 +14,7 @@ Không cần Composer, Node hoặc API ngoài khi chạy. Thư viện đã nằm
 | Nguyễn Trí Phong | Trang chủ, tìm kiếm, chuyên mục/thẻ công khai, chi tiết, view counter | PublicController.php; Post::publicList; Views/public/*; assets/css/app.css |
 | Nguyễn Lê Duy Ân | CRUD bài, editor, ảnh, transaction bài/thẻ, gửi duyệt | PostController.php; Post::save/transition; Security::upload/html; Views/posts/*; assets/js/app.js |
 | Lê Tuấn Quy | Duyệt/trả/gỡ bài, dashboard, chuyên mục/thẻ | AdminController.php; Models/Taxonomy.php; Views/admin/*; Post::transition |
-| Nguyễn Tấn Tài | Bình luận hai cấp, kiểm duyệt, demo, nghiệm thu | CommentController.php; Models/Comment.php; database/*; scripts/build-demo.php; tests/* |
+| Võ Tấn Tài | Bình luận hai cấp, kiểm duyệt, demo, nghiệm thu | CommentController.php; Models/Comment.php; database/*; scripts/build-demo.php; tests/* |
 
 ## Trạng thái bài
 

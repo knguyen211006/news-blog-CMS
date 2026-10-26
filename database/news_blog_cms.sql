@@ -104,7 +104,7 @@ INSERT INTO users(name,email,password_hash,role) VALUES ('Nguyễn Khôi Nguyên
 INSERT INTO users(name,email,password_hash,role) VALUES ('Nguyễn Lê Duy Ân','author1@newsblog.local','$2y$10$I1k/FG.OgD4N5g9A9FQHBuysHlxoQdqzUggSl1Ho6Ipi0HAOXlQ.S','AUTHOR');
 INSERT INTO users(name,email,password_hash,role) VALUES ('Nguyễn Trí Phong','author2@newsblog.local','$2y$10$I1k/FG.OgD4N5g9A9FQHBuysHlxoQdqzUggSl1Ho6Ipi0HAOXlQ.S','AUTHOR');
 INSERT INTO users(name,email,password_hash,role) VALUES ('Lê Tuấn Quy','reader1@newsblog.local','$2y$10$I1k/FG.OgD4N5g9A9FQHBuysHlxoQdqzUggSl1Ho6Ipi0HAOXlQ.S','USER');
-INSERT INTO users(name,email,password_hash,role) VALUES ('Nguyễn Tấn Tài','reader2@newsblog.local','$2y$10$I1k/FG.OgD4N5g9A9FQHBuysHlxoQdqzUggSl1Ho6Ipi0HAOXlQ.S','USER');
+INSERT INTO users(name,email,password_hash,role) VALUES ('Võ Tấn Tài','reader2@newsblog.local','$2y$10$I1k/FG.OgD4N5g9A9FQHBuysHlxoQdqzUggSl1Ho6Ipi0HAOXlQ.S','USER');
 INSERT INTO categories(name,slug,description) VALUES ('Công nghệ','cong-nghe','Những thay đổi số quanh chúng ta.');
 INSERT INTO categories(name,slug,description) VALUES ('Đời sống','doi-song','Nhìn cuộc sống từ những điều nhỏ.');
 INSERT INTO categories(name,slug,description) VALUES ('Góc học tập','goc-hoc-tap','Học tốt hơn, mỗi ngày một chút.');
