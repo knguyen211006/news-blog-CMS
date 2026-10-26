@@ -159,7 +159,7 @@ cd <thư-mục-dự-án>
 & 'C:\xampp\php\php.exe' tests/acceptance.php 'http://127.0.0.1:8089/news-blog-cms/'
 ```
 
-Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Biên bản 89 PASS là kết quả lịch sử; lần kiểm chứng ngày 25/10/2026 đang bị chặn bởi lỗi xác thực database 1045, chưa chạy lại acceptance/E2E và chưa đo lại tương phản. Kết quả và phạm vi xác minh hiện tại: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
+Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Biên bản 89 PASS là kết quả lịch sử; lần kiểm chứng ngày 26/10/2026 vẫn bị chặn bởi lỗi xác thực database 1045 ở phép thử kết nối chỉ-đọc, chưa chạy lại acceptance/E2E và chưa đo lại tương phản. Kết quả và phạm vi xác minh hiện tại: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
 
 ### 6.3. Kiểm tra cú pháp PHP
 
@@ -194,8 +194,8 @@ Mở `http://127.0.0.1:8090/news-blog-cms/`. Dữ liệu test vẫn có thể b�
 - **CSRF:** thao tác gửi form để ghi dữ liệu dùng POST và kiểm tra token; thiếu token trả HTTP 419. GET không xóa hay sửa dữ liệu nội dung; ngoại lệ là đếm lượt xem bài.
 - **Phiên đăng nhập:** đổi session ID sau khi đăng nhập; cookie `HttpOnly`, `SameSite=Lax`; kiểm tra lại trạng thái tài khoản ở mỗi yêu cầu nên tài khoản bị khóa mất quyền ngay. Mật khẩu được băm, không lưu dạng thuần.
 - **Giới hạn tần suất:** đăng nhập sai nhiều lần và bình luận liên tiếp bị chặn bằng HTTP 429.
-- **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; thư mục `uploads/` không cho thực thi PHP.
-- **Apache `.htaccess`:** tắt liệt kê thư mục; chặn truy cập trực tiếp vào cấu hình, mã nguồn, SQL, log, tài liệu. Các URL sau phải trả 403 hoặc 404 và không lộ nội dung:
+- **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; `uploads/.htaccess` khai báo chặn thực thi PHP, cần xác minh trên Apache đích.
+- **Apache `.htaccess`:** cấu hình khai báo tắt liệt kê thư mục và chặn truy cập trực tiếp vào cấu hình, mã nguồn, SQL, log, tài liệu. Chưa xác minh lại trên Apache trong Giai đoạn C; kết quả HTTP qua PHP router không xác nhận các quy tắc này. Khi triển khai, các URL sau phải trả 403 hoặc 404 và không lộ nội dung:
   - `/news-blog-cms/config/local.php`
   - `/news-blog-cms/.gitignore`
   - `/news-blog-cms/README.md`
