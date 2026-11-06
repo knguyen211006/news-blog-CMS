@@ -1,0 +1,27 @@
+sequenceDiagram
+  actor Reader as Độc giả
+  actor Admin as Quản trị
+  participant C as CommentController / AdminController
+  participant M as Comment model
+  participant DB as MySQL
+  Reader->>C: POST bình luận/trả lời (CSRF)
+  C->>C: Kiểm tra tài khoản, giới hạn 1 lần/20 giây
+  C->>M: create(user, postId, parentId, content)
+  M->>M: Kiểm tra nội dung 1–2000 ký tự
+  M->>DB: BEGIN; khóa bài, xác nhận published và chưa xóa
+  opt Trả lời
+    M->>DB: Khóa bình luận cha
+    M->>M: Cùng bài, bình luận gốc và đã duyệt
+  end
+  M->>DB: INSERT status=pending; COMMIT
+  C-->>Reader: Thông báo chờ duyệt
+  Admin->>C: POST approved/hidden (CSRF, id, version)
+  C->>M: moderate(admin, id, version, status)
+  M->>DB: BEGIN; khóa bình luận
+  M->>M: Kiểm tra quyền và version
+  M->>DB: Cập nhật trạng thái, tăng version; COMMIT
+  Note over Reader,DB: Công khai chỉ hiển thị nội dung đã duyệt; bình luận gốc bị ẩn giữ chỗ cho phản hồi đã duyệt.
+  Reader->>C: POST ẩn bình luận của mình
+  C->>M: moderate(user, id, version, hidden)
+  M->>M: Kiểm tra quyền sở hữu và version
+  M->>DB: Ẩn và tăng version trong transaction

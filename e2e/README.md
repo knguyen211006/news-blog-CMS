@@ -67,7 +67,19 @@ Tài liệu tham chiếu: [Playwright authentication](https://playwright.dev/doc
 ```
 
 `view-contract.php` đối chiếu biểu thức PHP và thuộc tính `href/action/name` với
-Git HEAD, bỏ qua thay đổi khoảng trắng. Chạy trước khi commit nâng cấp UI;
-sau commit, HEAD là baseline mới. `view-states.php` render dữ liệu rỗng qua Views
+baseline bàn giao `tests/support/view-contracts.json`, bỏ qua khoảng trắng.
+Chạy được trong ZIP không có Git; không cần database. Khi chủ động thay đổi
+hợp đồng View, phải rà soát và cập nhật baseline tương ứng, không tự tạo lại
+baseline trong lúc chạy kiểm thử. `view-states.php` render dữ liệu rỗng qua Views
 thật và kiểm tra icon/nội dung/CTA; chỉ đọc database test, không xóa dữ liệu để
 tạo trạng thái rỗng.
+
+## Máy chủ được quản lý riêng trên Windows
+
+Nếu môi trường kiểm thử không tự kết thúc máy chủ con, có thể chạy riêng
+PHP router với `CMS_CONFIG` trỏ tới `config/test.php`, rồi đặt
+`CMS_E2E_EXTERNAL_SERVER=1` khi chạy Playwright. Trước đó phải chuẩn bị
+fixture bằng `php tests/support/reset-database.php` trên database test riêng.
+Chế độ này không tự khởi động hoặc dừng máy chủ, không tự reset database.
+BASE_URL và tài khoản trong `.env` phải khớp máy chủ và fixture đã chuẩn bị.
+Không dùng chế độ này với database đang chứa dữ liệu cần giữ.

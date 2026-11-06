@@ -3,6 +3,7 @@ declare(strict_types=1);
 if(PHP_SAPI!=='cli')exit;
 $base=rtrim($argv[1]??'http://localhost/news-blog-cms/','/').'/';
 if(!preg_match('~^http://(localhost|127\.0\.0\.1)(:\d+)?/news-blog-cms/$~D',$base))exit("Only local CMS URLs are allowed.\n");
+$apache=in_array('--apache',$argv,true);
 $tests=[
  ''=>200,
  'index.php?r=articles'=>200,
@@ -60,7 +61,8 @@ foreach($tests as $path=>$expect){
  $rows[]=[$path?:'/',$expect,$status,$ok?'PASS':'FAIL'];
  echo ($ok?'PASS':'FAIL')." $path expected=$expect actual=$status".($location?' location='.$location:'').($error?' '.$error:'').PHP_EOL;
 }
-$md="# Kiểm tra URL và tài nguyên sau bàn giao\n\nThời điểm: ".date(DATE_ATOM)."\n\nĐích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.\n\n".(count($rows)-$failed)." PASS / $failed FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt; không xác minh Apache .htaccess.\n\n| Đường dẫn | Mong đợi | HTTP thực tế | Kết quả |\n|---|---|---|---|\n";
+$mode=$apache?'Apache 2.4 (kiểm tra .htaccess thực tế)':'PHP router cục bộ (không xác minh Apache .htaccess)';
+$md="# Kiểm tra URL và tài nguyên sau bàn giao\n\nThời điểm: ".date(DATE_ATOM)."\n\nĐích kiểm tra: $mode, dưới đường dẫn `/news-blog-cms/`.\n\n".(count($rows)-$failed)." PASS / $failed FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt; phạm vi máy chủ được ghi ở trên.\n\n| Đường dẫn | Mong đợi | HTTP thực tế | Kết quả |\n|---|---|---|---|\n";
 foreach($rows as $r)$md.='| '.implode(' | ',$r)." |\n";
 file_put_contents($root.'/docs/HANDOFF-VERIFICATION.md',$md);
 echo (count($rows)-$failed)." passed, $failed failed\n";

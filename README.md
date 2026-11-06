@@ -62,7 +62,7 @@ Tài khoản đăng ký mới luôn là USER; chỉ Admin cấp quyền AUTHOR. 
 - PHP 8.1 trở lên (đã chạy trên PHP 8.2.12).
 - MySQL 8 hoặc MariaDB 10.4 trở lên (đã chạy trên MariaDB 10.4.32 của XAMPP).
 - Apache 2.4 với `mod_rewrite` và `AllowOverride All` cho thư mục chứa dự án.
-- PHP extension: `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session`, `openssl`.
+- PHP extension: `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session`, `openssl`. Bộ acceptance/HTTP smoke cần thêm `curl`.
 - Node.js và npm: **chỉ** cần nếu muốn chạy kiểm thử giao diện Playwright trong `e2e/`, không cần để chạy website.
 - Python 3: chỉ cần để chạy `scripts/package.py` (đóng gói).
 
@@ -159,7 +159,7 @@ cd <thư-mục-dự-án>
 & 'C:\xampp\php\php.exe' tests/acceptance.php 'http://127.0.0.1:8089/news-blog-cms/'
 ```
 
-Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Lần kiểm chứng ngày 26/10/2026 đạt **89 PASS / 0 FAIL**; Playwright ba lượt liên tiếp đều **43 passed / 0 failed**, HTTP smoke **39 passed / 0 failed**. Nút chọn file Dark mode đạt tương phản **12,5685:1** trên desktop/mobile. Kết quả và phạm vi xác minh: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
+Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Lần kiểm chứng ngày 07/11/2026 trên môi trường riêng đạt **89 PASS / 0 FAIL**; Playwright **43 passed / 0 failed** và HTTP smoke qua Apache **39 passed / 0 failed**. Nút chọn file Dark mode đạt tương phản **12,5685:1** trên desktop/mobile. Kết quả và phạm vi xác minh: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
 
 ### 6.3. Kiểm tra cú pháp PHP
 
@@ -175,7 +175,7 @@ Bộ Playwright theo mô hình Page Object nằm trong `e2e/`, chạy trên Chro
 
 Kiểm tra thủ công trên trình duyệt: `docs/MANUAL-TESTS.md`.
 
-`php tests/view-states.php` đã xác minh **12 trạng thái rỗng qua 10 ca render View** ngày 26/10/2026: không có PHP warning, mỗi trạng thái có icon/nội dung/CTA. Đây là kiểm tra DOM phía server, không phải xác minh hình ảnh của cả 12 trạng thái trên trình duyệt.
+`php tests/view-states.php` đã xác minh **12 trạng thái rỗng qua 10 ca render View** ngày 07/11/2026: không có PHP warning, mỗi trạng thái có icon/nội dung/CTA. Đây là kiểm tra DOM phía server, không phải xác minh hình ảnh của cả 12 trạng thái trên trình duyệt.
 
 ## 7. Xem trước giao diện không ảnh hưởng database demo
 
@@ -196,8 +196,8 @@ Mở `http://127.0.0.1:8090/news-blog-cms/`. Dữ liệu test vẫn có thể b�
 - **CSRF:** thao tác gửi form để ghi dữ liệu dùng POST và kiểm tra token; thiếu token trả HTTP 419. GET không xóa hay sửa dữ liệu nội dung; ngoại lệ là đếm lượt xem bài.
 - **Phiên đăng nhập:** đổi session ID sau khi đăng nhập; cookie `HttpOnly`, `SameSite=Lax`; kiểm tra lại trạng thái tài khoản ở mỗi yêu cầu nên tài khoản bị khóa mất quyền ngay. Mật khẩu được băm, không lưu dạng thuần.
 - **Giới hạn tần suất:** đăng nhập sai nhiều lần và bình luận liên tiếp bị chặn bằng HTTP 429.
-- **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; `uploads/.htaccess` khai báo chặn thực thi PHP, cần xác minh trên Apache đích.
-- **Apache `.htaccess`:** cấu hình khai báo tắt liệt kê thư mục và chặn truy cập trực tiếp vào cấu hình, mã nguồn, SQL, log, tài liệu. Chưa xác minh lại trên Apache trong Giai đoạn C; kết quả HTTP qua PHP router không xác nhận các quy tắc này. Khi triển khai, các URL sau phải trả 403 hoặc 404 và không lộ nội dung:
+- **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; `uploads/.htaccess` khai báo chặn thực thi PHP, đã kiểm tra chặn PHP trên Apache riêng; cần giữ quy tắc này khi triển khai.
+- **Apache `.htaccess`:** cấu hình khai báo tắt liệt kê thư mục và chặn truy cập trực tiếp vào cấu hình, mã nguồn, SQL, log, tài liệu. Đã xác minh trên Apache 2.4 với cấu hình riêng ngày 07/11/2026 (39 ca đạt); xem `docs/SUBMISSION-CHECK.md`. PHP router không thay thế kiểm tra Apache. Khi triển khai, các URL sau phải trả 403 hoặc 404 và không lộ nội dung:
   - `/news-blog-cms/config/local.php`
   - `/news-blog-cms/.gitignore`
   - `/news-blog-cms/README.md`
@@ -262,3 +262,14 @@ Sau khi tạo, mở thử ZIP để xác nhận không có `config/local.php`, `
 - **Upload thất bại:** dùng ảnh JPEG/PNG/WebP hợp lệ, tối đa 2 MB; kiểm tra quyền ghi `uploads/`.
 - **Tiêu đề tiếng Việt bị tách dấu:** nhấn `Ctrl+F5` để xóa cache CSS. Giao diện dùng font hệ thống Cambria (tiêu đề) và Segoe UI (nội dung) có sẵn trên Windows; trên máy không có các font này, trình duyệt dùng font dự phòng nên hình dạng chữ có thể khác.
 - **Lỗi bảng Aria hoặc bảng quyền của MySQL:** xem `docs/ENVIRONMENT.md`; sao lưu trước, không xóa `mysql/data`.
+
+## 13. Bản bàn giao đã rà soát 07/11/2026
+
+- Sơ đồ Use Case, ERD và hai Sequence nằm trong `diagrams/`.
+- Kiểm tra không ghi dữ liệu: `php tests/regression-readonly.php` và
+  `php tests/view-contract.php`; cả hai không cần database hoặc Git.
+- `view-contract.php` dùng baseline được bàn giao trong `tests/support/view-contracts.json`.
+- Menu Chuyên mục dẫn tới bộ lọc hiện hành, không phụ thuộc slug cố định.
+- Không dùng gói tổng hợp các bản cũ làm gói nộp: gói nộp chỉ chứa một phiên bản
+  và phải loại cấu hình thật, session, log, ảnh upload, lịch sử Git.
+- Kết quả xác minh mới và giới hạn môi trường: `docs/SUBMISSION-CHECK.md`.

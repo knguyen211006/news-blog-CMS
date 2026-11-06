@@ -53,6 +53,10 @@ config/example.php
 config/routes.php
 database/news_blog_cms.sql
 database/schema.sql
+diagrams/comment-sequence.mmd
+diagrams/erd.mmd
+diagrams/publishing-sequence.mmd
+diagrams/use-case.puml
 docs/.gitkeep
 docs/ARCHITECTURE.md
 docs/ENVIRONMENT.md
@@ -60,6 +64,7 @@ docs/FEATURES.md
 docs/FILE-LIST.txt
 docs/HANDOFF-VERIFICATION.md
 docs/MANUAL-TESTS.md
+docs/SUBMISSION-CHECK.md
 docs/TEST-RESULTS.md
 docs/UX-UI-VERIFICATION.md
 docs/diagrams/comment-sequence.mmd
@@ -96,7 +101,10 @@ scripts/verify.ps1
 storage/.gitkeep
 tests/acceptance.php
 tests/http-smoke.php
+tests/regression-readonly.php
 tests/support/reset-database.php
+tests/support/view-contract-functions.php
+tests/support/view-contracts.json
 tests/view-contract.php
 tests/view-states.php
 uploads/.gitkeep

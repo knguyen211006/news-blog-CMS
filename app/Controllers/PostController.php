@@ -32,7 +32,9 @@ final class PostController {
     public function preview(): void {
         $u=Auth::requireUser(['AUTHOR','ADMIN']);$p=Post::get(number_input('id',$_GET));Post::own($p,$u);
         $p['author_name']=DB::scalar('SELECT name FROM users WHERE id=?',[$p['author_id']]);
-        $p['category_name']=DB::scalar('SELECT name FROM categories WHERE id=?',[$p['category_id']])?:'Chưa chọn chuyên mục';
+        $category=DB::one('SELECT name,slug FROM categories WHERE id=?',[$p['category_id']]);
+        $p['category_name']=$category['name']??'Chưa chọn chuyên mục';
+        $p['category_slug']=$category['slug']??'';
         View::render('public/article',['title'=>'Xem trước · '.$p['title'],'post'=>$p,'preview'=>true,'comments'=>[],'tags'=>DB::all('SELECT t.* FROM tags t JOIN post_tags pt ON pt.tag_id=t.id WHERE pt.post_id=?',[$p['id']]),'history'=>DB::all('SELECT h.*,u.name actor_name FROM post_history h JOIN users u ON u.id=h.actor_id WHERE h.post_id=? ORDER BY h.id DESC',[$p['id']])]);
     }
     public function action(): void {

@@ -19,7 +19,7 @@ $isWorkspace=str_starts_with($route,'admin')||str_starts_with($route,'author');
 <div class="topline"><div class="container d-flex justify-content-between"><span>MỖI CÂU CHUYỆN, MỘT GÓC NHÌN</span><span><?= date('d.m.Y') ?> · Blog cộng đồng</span></div></div>
 <header class="site-header" data-testid="site-header"><div class="container header-row">
 <a class="brand" href="<?= e(url()) ?>" aria-label="Góc Nhìn - Trang chủ"><span class="brand-mark">g.</span><span>góc nhìn<span class="brand-dot">.</span></span></a>
-<nav class="main-nav" aria-label="Điều hướng chính"><a class="<?= $route===''?'active':'' ?>" href="<?= e(url()) ?>">Trang chủ</a><a class="<?= $route==='articles'?'active':'' ?>" href="<?= e(url('articles')) ?>">Khám phá</a><a href="<?= e(url('articles',['category'=>'goc-hoc-tap'])) ?>">Góc học tập</a></nav>
+<nav class="main-nav" aria-label="Điều hướng chính"><a class="<?= $route===''?'active':'' ?>" href="<?= e(url()) ?>">Trang chủ</a><a class="<?= $route==='articles'?'active':'' ?>" href="<?= e(url('articles')) ?>">Khám phá</a><a href="<?= e(url('articles')) ?>#category">Chuyên mục</a></nav>
 <div class="account-nav">
 <?php if($viewer): ?>
 <a class="profile-link" data-testid="profile-link" href="<?= e(url('profile')) ?>"><?= e(excerpt($viewer['name'],25)) ?></a>

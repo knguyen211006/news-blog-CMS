@@ -1,3 +1,5 @@
+> Kết quả mới ngày 07/11/2026: Playwright 43/43, TypeScript đạt; xem `SUBMISSION-CHECK.md`. Phần dưới là biên bản lịch sử.
+
 # UX/UI và E2E — kết quả kiểm chứng
 
 Kết quả chốt: 2026-10-24. PHP/E2E dùng news_blog_cms_test.

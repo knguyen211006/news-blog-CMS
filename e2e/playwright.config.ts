@@ -12,7 +12,7 @@ export default defineConfig({
     baseURL, locale: 'vi-VN', colorScheme: 'dark',
     trace: 'on-first-retry', screenshot: 'only-on-failure', video: 'off',
   },
-  webServer: {
+  webServer: process.env.CMS_E2E_EXTERNAL_SERVER === '1' ? undefined : {
     command: 'node support/server.cjs', url: baseURL,
     reuseExistingServer: false, timeout: 30_000, stderr: 'ignore',
   },

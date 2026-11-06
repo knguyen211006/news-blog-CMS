@@ -1,0 +1,31 @@
+sequenceDiagram
+  actor Author as Tác giả
+  actor Admin as Quản trị
+  participant C as PostController
+  participant M as Post model
+  participant DB as MySQL
+  Author->>C: POST lưu nháp (CSRF, nội dung, version)
+  C->>C: Kiểm tra AUTHOR/ADMIN
+  C->>M: save(user, id)
+  M->>M: Lọc HTML, kiểm tra dữ liệu và ảnh
+  M->>DB: BEGIN; khóa bài khi sửa
+  M->>M: Kiểm tra quyền sở hữu, trạng thái, version
+  M->>DB: Lưu bài, thẻ, lịch sử; COMMIT
+  C-->>Author: 303 chuyển đến xem trước
+  Author->>C: POST submit (id, version, CSRF)
+  C->>M: transition(submit)
+  M->>DB: BEGIN; SELECT FOR UPDATE
+  M->>M: Kiểm tra nội dung, chuyên mục, version
+  M->>DB: draft/rejected → pending; tăng version; lịch sử; COMMIT
+  Admin->>C: POST publish hoặc reject (CSRF, version, lý do)
+  C->>M: transition(action)
+  M->>DB: BEGIN; khóa bài
+  M->>M: Kiểm tra ADMIN, pending, version
+  alt Duyệt
+    M->>DB: published; published_at; tăng version; lịch sử
+  else Trả bài
+    M->>M: Lý do 5–2000 ký tự
+    M->>DB: rejected; rejection_reason; tăng version; lịch sử
+  end
+  M->>DB: COMMIT (ROLLBACK nếu lỗi)
+  C-->>Admin: 303 xem trước; lỗi 409 nếu version cũ

@@ -1,10 +1,10 @@
 # Kiểm tra URL và tài nguyên sau bàn giao
 
-Thời điểm: 2026-10-26T09:46:39+01:00
+Thời điểm: 2026-11-06T20:09:42+01:00
 
-Đích kiểm tra: máy chủ PHP cục bộ tạm, dưới đường dẫn `/news-blog-cms/`.
+Đích kiểm tra: Apache 2.4 (kiểm tra .htaccess thực tế), dưới đường dẫn `/news-blog-cms/`.
 
-39 PASS / 0 FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt; không xác minh Apache .htaccess.
+39 PASS / 0 FAIL. Kiểm thử HTTP này không xác nhận bố cục hoặc tương tác JavaScript bằng trình duyệt; phạm vi máy chủ được ghi ở trên.
 
 | Đường dẫn | Mong đợi | HTTP thực tế | Kết quả |
 |---|---|---|---|

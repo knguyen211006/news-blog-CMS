@@ -25,3 +25,10 @@ xử lý. Không tự xóa thư mục dữ liệu, sửa hay dựng lại bảng
 Kiểm thử bằng PHP router không xác minh quy tắc `.htaccess` của Apache.
 Kiểm tra ZIP trên database trống trong cùng bộ XAMPP không tương đương cài đặt
 trên một bộ XAMPP mới. Các giới hạn và số liệu cụ thể xem `TEST-RESULTS.md`.
+
+## Kiểm chứng mới 07/11/2026
+
+Đã cài ZIP vào thư mục sạch, MariaDB với data directory riêng và Apache cấu hình
+riêng. Không sửa cấu hình hay data directory của XAMPP đang dùng. Kết quả thực tế
+và phạm vi: `SUBMISSION-CHECK.md`. Không đồng nhất cài sạch trên cùng máy với
+kiểm thử trên một máy XAMPP mới hoàn toàn.

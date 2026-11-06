@@ -85,12 +85,12 @@ final class Post {
     }
     public static function publicList(array $filters=[],int $page=1,int $size=6): array {
         $where=["p.status='published'","p.deleted_at IS NULL"]; $params=[];
-        if(!empty($filters['q'])) {
+        if(isset($filters['q']) && $filters['q'] !== '') {
             $term='%'.str_replace(['!','%','_'],['!!','!%','!_'],$filters['q']).'%';
             $where[]="(p.title LIKE ? ESCAPE '!' OR p.excerpt LIKE ? ESCAPE '!')"; array_push($params,$term,$term);
         }
-        if(!empty($filters['category'])) { $where[]='c.slug=?'; $params[]=$filters['category']; }
-        if(!empty($filters['tag'])) { $where[]='EXISTS(SELECT 1 FROM post_tags pt JOIN tags t ON t.id=pt.tag_id WHERE pt.post_id=p.id AND t.slug=?)'; $params[]=$filters['tag']; }
+        if(isset($filters['category']) && $filters['category'] !== '') { $where[]='c.slug=?'; $params[]=$filters['category']; }
+        if(isset($filters['tag']) && $filters['tag'] !== '') { $where[]='EXISTS(SELECT 1 FROM post_tags pt JOIN tags t ON t.id=pt.tag_id WHERE pt.post_id=p.id AND t.slug=?)'; $params[]=$filters['tag']; }
         if(!empty($filters['featured'])) $where[]='p.is_featured=1';
         $condition=implode(' AND ',$where);
         $total=(int)DB::scalar("SELECT COUNT(*) FROM posts p JOIN users u ON u.id=p.author_id LEFT JOIN categories c ON c.id=p.category_id WHERE $condition",$params);

@@ -1,47 +1,66 @@
-# Kiểm chứng Giai đoạn C — 26/10/2026
+# Kiểm chứng bản nộp — 07/11/2026
 
-Kết nối đã được xác nhận trước mọi test dùng database bằng lệnh PDO chỉ-đọc:
-`database=news_blog_cms_test; SELECT 1 = 1` (exit 0). Lỗi xác thực 1045 trước
-đây không còn tái hiện trong lượt này. Các bộ test ứng dụng dưới đây chỉ chạy
-trên `news_blog_cms_test`; không truy cập htdocs hoặc database demo.
+## Kết quả thực tế
 
-| Kiểm tra | Bằng chứng thực tế | Kết quả |
-|---|---|---|
-| Nút chọn file, `author/edit`, Dark mode | Playwright đọc `::file-selector-button`: chữ `rgb(232, 236, 244)`, nền `rgb(30, 38, 66)`, tỷ lệ **12.568519752431673:1**; thường/hover, desktop/mobile đều giống nhau; axe không có violation trong các ca editor | Đạt >= 4.5:1, không sửa CSS/font |
-| PHP lint | `php -l`: 288 file tracked (46 mã dự án, 242 vendor) + 2 config riêng = **290 file, 0 lỗi** | Exit 0 |
-| Acceptance | `php tests/acceptance.php http://127.0.0.1:8089/news-blog-cms/` | **89 PASS / 0 FAIL**, exit 0; bảng chi tiết bên dưới |
-| View-contract | `php tests/view-contract.php` → `Missing original contracts: 0` | Exit 0 |
-| View-states | `php tests/view-states.php` → 10 ca render, **12 trạng thái rỗng**, không có PHP warning, không thay đổi database | Exit 0 |
-| Check | `CMS_CONFIG=config/test.php`, `php scripts/check.php` | 7 extension OK; PHP 8.2.12; MariaDB 10.4.32; HTML Purifier: `<p>safe</p>`; exit 0 |
-| Dữ liệu khi chạy check sau acceptance | users=6, categories=4, tags=6, posts=14, comments=8 | Số thực tế sau test, không phải seed ban đầu |
-| E2E typecheck | `npm.cmd run typecheck` | Exit 0 |
-| E2E lượt 1 | `npm.cmd test`, 1 setup + 21 desktop + 21 mobile | **43 passed / 0 failed**, 30.0s, exit 0 |
-| E2E lượt 2 | Cùng lệnh, fixture tự dọn và nạp lại | **43 passed / 0 failed**, 30.4s, exit 0 |
-| E2E lượt 3 | Cùng lệnh, fixture tự dọn và nạp lại | **43 passed / 0 failed**, 30.2s, exit 0 |
-| HTTP smoke | `php tests/http-smoke.php http://127.0.0.1:8089/news-blog-cms/` | **39 passed / 0 failed**, exit 0; chi tiết ở `HANDOFF-VERIFICATION.md` |
-| Quét E2E | `pages/`, `tests/`, `support/`, `playwright.config.ts`; mẫu `waitForTimeout`, `xpath=`, `/html/`, `/html[` | **0 kết quả** (rg exit 1 = không khớp) |
-| Gói thử trước khi chốt ZIP | 484 file; CRC OK; khớp chính xác `docs/FILE-LIST.txt`; đủ README, SQL, example config, HTML Purifier, tests/support | Không có cấu hình riêng, .env, node_modules, .browsers, .git, tests/results, session/log, upload thử, GEMINI/ux-ui-automation |
-| Cài từ ZIP vào database tạm | Tạo `news_blog_cms_zipcheck` bằng tài khoản test bị từ chối với **1044** (không đủ quyền), khác lỗi xác thực 1045 đã hết | Chưa xác minh cài sạch, trang chủ và reader2 từ ZIP; thư mục giải nén thử đã dọn |
+| Hạng mục | Kết quả |
+|---|---|
+| Cài từ ZIP vào thư mục sạch | Thành công, tài khoản database riêng được tạo bởi installer |
+| MariaDB riêng | 10.4.32, data directory mới, chỉ lắng nghe 127.0.0.1:13369 |
+| Dữ liệu seed sau cài sạch | 5 users, 4 categories, 6 tags, 12 posts, 6 comments |
+| scripts/check.php | 7 extension OK; HTML Purifier trả `<p>safe</p>` |
+| PHP acceptance | 89 PASS / 0 FAIL, chỉ trên database test của MariaDB riêng |
+| Apache 2.4, quy tắc .htaccess thật | 39 PASS / 0 FAIL; cấu hình, SQL, log, mã nguồn nội bộ và PHP trong uploads đều bị chặn |
+| Playwright Chromium desktop/mobile | 43 passed / 0 failed, exit 0; máy chủ thử nghiệm được quản lý riêng |
+| TypeScript | tsc --noEmit, exit 0 |
+| Lỗi tìm kiếm zero, escape wildcard, preview chuyên mục | 11 PASS / 0 FAIL qua tests/regression-readonly.php; không cần database |
+| View contract | Missing original contracts: 0; 18 View, chạy được từ ZIP không có Git |
+| Trạng thái rỗng | 12 trạng thái qua 10 ca render, không có PHP warning |
+| Sơ đồ bàn giao | Use Case, ERD 8 bảng, Sequence xuất bản, Sequence bình luận |
 
-Ba lượt E2E chạy liên tiếp, không sửa mã hoặc reset thủ công giữa các lượt.
-Toàn bộ 5 ca `auth.spec.ts` trên Mobile Chrome đều đạt ở cả ba lượt; không tái
-hiện lỗi auth nên không suy đoán nguyên nhân lỗi lịch sử. Không sửa Controllers/Models.
+## Phần đã sửa
 
-Lượt đo tương phản riêng có 3 ca đạt (gồm setup), nhưng tiến trình server không
-tự kết thúc khi chạy trong sandbox Windows. Sau khi xác định đúng cây tiến trình
-do lượt này tạo và dừng nó, Playwright báo `3 passed (3.2m)`, exit 0. Ba lượt đầy
-đủ chạy ngoài sandbox, tự kết thúc bình thường trong thời gian ghi ở bảng trên.
-Không thêm fixed sleep, không chụp lại hàng loạt ảnh.
+- Từ khóa `0`, slug chuyên mục `0` và slug thẻ `0` được lọc đúng.
+- Menu Chuyên mục dẫn tới bộ lọc hiện hành; không còn phụ thuộc slug gắn cứng.
+- Xem trước lấy cả tên và slug hiện tại của chuyên mục; chuyên mục chưa chọn vẫn có đường dẫn an toàn.
+- Bài kiểm tra hợp đồng View dùng baseline kèm gói; không gọi Git.
+- HTTP smoke hỗ trợ `--apache` để ghi đúng môi trường đã kiểm tra.
+- Có chế độ `CMS_E2E_EXTERNAL_SERVER=1` cho môi trường Windows không tự kết thúc tiến trình con.
+- Hướng dẫn liệt kê extension curl cần cho acceptance/HTTP smoke.
 
-Phạm vi chưa xác minh: bảo vệ Apache `.htaccess` và cài trên XAMPP mới. HTTP smoke
-ở đây chỉ kiểm tra PHP router. 12 trạng thái rỗng được xác minh bằng render View
-và kiểm tra DOM (icon/nội dung/CTA), không phải 12 ảnh chụp trình duyệt.
+## Bảo toàn dữ liệu và giới hạn
 
-## Acceptance — kết quả chạy thực tế của lượt này
+Database đang dùng `news_blog_cms` trên máy không được dùng chạy acceptance/E2E.
+Mọi reset fixture, tạo bài và upload thử đều diễn ra trên bản giải nén trong thư mục
+kiểm tra và MariaDB riêng. Cấu hình thật và ảnh upload của bản gốc được đối chiếu SHA-256.
+Không import SQL seed lên database đang có dữ liệu. Khi chuyển thư mục, giữ cấu hình
+`config/local.php` và ảnh upload hiện có; kết nối vẫn trỏ tới database chính.
 
-Thời điểm: 2026-10-26T15:41:26+07:00
+Kiểm tra dùng các chương trình PHP/Apache/MariaDB của XAMPP hiện có với cấu hình và
+data directory riêng. Đây là cài sạch ứng dụng và database trên cùng máy, chưa phải
+kiểm chứng một máy Windows mới hay tất cả các phiên bản MySQL/PHP khác.
 
-URL: http://127.0.0.1:8089/news-blog-cms/
+Lần thử acceptance đầu gặp lỗi lưu cookie vào thư mục tạm ngoài vùng kiểm thử;
+chạy lại với `php -d sys_temp_dir=<thư-mục-tạm-có-quyền-ghi>` đạt 89/89.
+Lượt E2E đầu hoàn thành các ca nhưng vướng đóng máy chủ con; lượt xác minh cuối
+dùng máy chủ riêng và kết thúc bình thường với 43 passed, exit 0.
+
+## Lệnh kiểm tra không ghi dữ liệu
+
+```powershell
+php tests/regression-readonly.php
+php tests/view-contract.php
+```
+
+Acceptance/E2E có reset dữ liệu test. Chỉ chạy sau khi tạo cấu hình và database test
+riêng theo README; không trỏ máy chủ kiểm thử tới database cần giữ.
+
+---
+
+# Kết quả kiểm thử HTTP + MariaDB
+
+Thời điểm: 2026-11-07T02:03:20+07:00
+
+URL: http://127.0.0.1:18093/news-blog-cms/
 
 Database riêng: news_blog_cms_test. Không chạy thao tác nghiệm thu trên database demo chính.
 
