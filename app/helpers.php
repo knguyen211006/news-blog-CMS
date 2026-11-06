@@ -4,7 +4,19 @@ function e(mixed $value): string { return htmlspecialchars((string) $value, ENT_
 function url(string $route = '', array $params = []): string {
     return config('base_path') . '/' . ($route === '' && !$params ? '' : 'index.php?' . http_build_query(['r' => $route] + $params));
 }
-function asset(string $path): string { return config('base_path') . '/' . ltrim($path, '/'); }
+function asset(string $path): string {
+    $relative = ltrim($path, '/');
+    $url = config('base_path') . '/' . $relative;
+    if (in_array(strtolower(pathinfo($relative, PATHINFO_EXTENSION)), ['css', 'js'], true)) {
+        $file = ROOT . '/' . $relative;
+        if (is_file($file)) {
+            static $versions = [];
+            $versions[$relative] ??= substr(hash_file('sha256', $file), 0, 20);
+            $url .= '?v=' . $versions[$relative];
+        }
+    }
+    return $url;
+}
 function redirect(string $route = '', array $params = []): never { header('Location: ' . url($route, $params), true, 303); exit; }
 function flash(string $text, string $kind = 'success'): void { $_SESSION['flash'] = [$text, $kind]; }
 function csrf_field(): string { return '<input type="hidden" name="_csrf" value="' . e(App\Core\Security::token()) . '">'; }
