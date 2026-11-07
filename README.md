@@ -59,8 +59,18 @@ Tài khoản đăng ký mới luôn là USER; chỉ Admin cấp quyền AUTHOR. 
 
 ## 4. Yêu cầu môi trường
 
-- Docker trên Windows: Docker Desktop ở chế độ Linux containers, Git và PowerShell. Có thể mở dự án bằng VS Code.
-- XAMPP: Apache 2.4 với `mod_rewrite` và `AllowOverride All`, PHP 8.1 trở lên và MySQL 8 hoặc MariaDB 10.4 trở lên. PHP cần `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session` và `openssl`.
+### Chạy bản mẫu bằng Docker trên Windows
+
+- **Docker Desktop** đang chạy ở chế độ Linux containers, có lệnh `docker compose`.
+- **Git** để clone mã nguồn và **PowerShell** để chạy `Start-Docker.ps1`. VS Code là trình soạn thảo tùy chọn.
+- **Kết nối Internet ở lần dựng đầu tiên** để tải image và các gói cần cho bản dựng.
+- **Cổng 8088 còn trống** nếu dùng địa chỉ mặc định. Nếu cổng đã được dùng, tạo cấu hình bằng `Start-Docker.ps1`, đổi `CMS_PORT` trong `.env` sang cổng còn trống rồi chạy lại.
+
+Docker chạy **PHP 8.2 với Apache** và **MariaDB 10.11** trong hai container. Image web đã có thư viện ứng dụng và cài các PHP extension cần dùng. Cách chạy Docker chỉ cần các công cụ trên máy được liệt kê ở trên.
+
+### Chạy trực tiếp bằng XAMPP
+
+Dùng Apache 2.4 với `mod_rewrite` và `AllowOverride All`, PHP 8.1 trở lên và MySQL 8 hoặc MariaDB 10.4 trở lên. Bật các PHP extension `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session` và `openssl`. Xem mục 5.4 để cài đặt.
 
 ## 5. Cài đặt và chạy
 
