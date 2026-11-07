@@ -75,7 +75,63 @@ Kiểm tra nhanh PHP (đường dẫn dưới đây là mặc định của XAMP
 
 ## 5. Cài đặt và chạy
 
-### 5.1. Cài trên máy mới (XAMPP)
+### 5.1. Chạy bản GitHub bằng Docker trên Windows
+
+1. Mở Docker Desktop ở chế độ Linux containers và chờ Docker Engine khởi động.
+2. Clone repository rồi mở thư mục dự án trong VS Code.
+
+```powershell
+git clone https://github.com/knguyen211006/news-blog-CMS.git
+cd news-blog-CMS
+code .
+```
+
+3. Chọn **Terminal → New Terminal** trong VS Code. Trong thư mục có `compose.yaml`, chạy:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-Docker.ps1
+```
+
+4. Mở <http://127.0.0.1:8088/>. Dùng `docker compose ps` để xem trạng thái của `web` (PHP/Apache) và `db` (MariaDB).
+
+Script tạo `.env` cục bộ khi chạy lần đầu. MariaDB nạp dữ liệu mẫu từ `database/news_blog_cms.sql` khi volume database còn trống. Tài khoản quản trị của bản mẫu là `admin@newsblog.local`, mật khẩu `Demo@12345`. Lần dựng image đầu tiên cần Internet.
+
+### 5.2. Chạy bản Docker dữ liệu thật của nhóm
+
+Trên máy đã cài bản nội bộ, mở đúng thư mục `C:\BE1\Docker\Goc-Nhin-Docker` trong VS Code. Mở PowerShell tại thư mục đó và chạy:
+
+```powershell
+docker compose up -d --wait
+```
+
+Mở <http://127.0.0.1:8088/> và dùng tài khoản đã có trong bản nội bộ. Dự án này có tên `goc-nhin-that-sach`. Giữ `.env` đi cùng dự án để lần chạy tiếp theo dùng đúng cấu hình của các volume hiện có. Hãy dừng bản đang dùng cổng 8088 trước khi chuyển giữa bản GitHub và bản nội bộ.
+
+Sau khi sửa mã nguồn, dựng lại image từ đúng thư mục dự án:
+
+```powershell
+docker compose up -d --build --wait
+```
+
+Dùng `docker compose stop` để dừng và `docker compose start` để chạy lại. Database, ảnh tải lên và dữ liệu ứng dụng nằm trong các volume Docker. Tránh dùng `docker compose down -v` vì tùy chọn `-v` xóa các volume của dự án. Bản Docker dùng MariaDB riêng nên có thể chạy độc lập với XAMPP. Giữ SQL dữ liệu thật, ảnh tải lên và `.env` ở bản nội bộ.
+
+### 5.3. Các địa chỉ trang trên Docker
+
+| Màn hình | Đường dẫn tại `http://127.0.0.1:8088` |
+|---|---|
+| Trang chủ | `/` |
+| Danh sách, tìm kiếm | `/index.php?r=articles` |
+| Chi tiết bài | `/index.php?r=article&slug={slug}` |
+| Đăng nhập, đăng ký | `/index.php?r=login`, `/index.php?r=register` |
+| Hồ sơ cá nhân | `/index.php?r=profile` |
+| Bài viết của tôi | `/index.php?r=author/posts` |
+| Viết bài | `/index.php?r=author/edit` |
+| Dashboard Admin | `/index.php?r=admin` |
+| Duyệt bài | `/index.php?r=admin/posts&status=pending` |
+| Chuyên mục, thẻ | `/index.php?r=admin/taxonomy` |
+| Kiểm duyệt bình luận | `/index.php?r=admin/comments` |
+| Quản lý tài khoản | `/index.php?r=admin/users` |
+
+### 5.4. Cài trên máy mới (XAMPP)
 
 1. Giải nén thư mục `news-blog-cms` vào `C:\xampp\htdocs\`, sao cho tồn tại `C:\xampp\htdocs\news-blog-cms\index.php` (không để lồng thêm một cấp thư mục).
 2. Mở XAMPP Control Panel, bấm **Start** cho **Apache** và **MySQL**.
@@ -93,39 +149,6 @@ Các extension cần thiết phải báo `OK`; script in phiên bản PHP và da
 6. Mở `http://localhost/news-blog-cms/`.
 
 Lưu ý: `config/local.php` và `config/test.php` chứa thông tin kết nối riêng của từng máy, **không** được commit và **không** nằm trong gói ZIP nộp. Có thể dùng `scripts/install.php` để cài tự động; script từ chối ghi đè database đã có bảng hoặc file cấu hình đã tồn tại.
-
-### 5.2. Tài khoản demo
-
-Đây là tài khoản của website (bảng `users`), không phải tài khoản MySQL. Mật khẩu chung: `Demo@12345`. Chỉ dùng cho môi trường demo local.
-
-| Vai trò | Email | Họ tên |
-|---|---|---|
-| ADMIN | `admin@newsblog.local` | Nguyễn Khôi Nguyên |
-| AUTHOR | `author1@newsblog.local` | Nguyễn Lê Duy Ân |
-| AUTHOR | `author2@newsblog.local` | Nguyễn Trí Phong |
-| USER | `reader1@newsblog.local` | Lê Tuấn Quy |
-| USER | `reader2@newsblog.local` | Võ Tấn Tài |
-
-### 5.3. Các địa chỉ trang
-
-Ứng dụng dùng một front controller (`index.php`), định tuyến bằng tham số `?r=`:
-
-| Màn hình | URL |
-|---|---|
-| Trang chủ | `/news-blog-cms/` |
-| Danh sách, tìm kiếm | `/news-blog-cms/index.php?r=articles` |
-| Chi tiết bài | `/news-blog-cms/index.php?r=article&slug={slug}` |
-| Đăng nhập, đăng ký | `/news-blog-cms/index.php?r=login`, `?r=register` |
-| Hồ sơ cá nhân | `/news-blog-cms/index.php?r=profile` |
-| Bài viết của tôi (Tác giả) | `/news-blog-cms/index.php?r=author/posts` |
-| Viết bài / sửa bài | `/news-blog-cms/index.php?r=author/edit` |
-| Dashboard Admin | `/news-blog-cms/index.php?r=admin` |
-| Duyệt bài | `/news-blog-cms/index.php?r=admin/posts&status=pending` |
-| Chuyên mục, thẻ | `/news-blog-cms/index.php?r=admin/taxonomy` |
-| Kiểm duyệt bình luận | `/news-blog-cms/index.php?r=admin/comments` |
-| Quản lý tài khoản | `/news-blog-cms/index.php?r=admin/users` |
-
-Mở trang Admin khi chưa đăng nhập sẽ được chuyển về trang đăng nhập; người đã đăng nhập nhưng không đủ quyền nhận lỗi 403.
 
 ## 6. Kiểm thử
 
@@ -247,7 +270,7 @@ python scripts/package.py --output '<đường-dẫn>\news-blog-cms-submission.z
 Get-FileHash '<đường-dẫn>\news-blog-cms-submission.zip' -Algorithm SHA256
 ```
 
-Sau khi tạo, mở thử ZIP để xác nhận không có `config/local.php`, `config/test.php`, `.git`; rồi giải nén vào thư mục sạch, làm theo mục 5.1 để chắc chắn cài từ ZIP chạy được.
+Sau khi tạo, mở thử ZIP để xác nhận không có `config/local.php`, `config/test.php`, `.git`; rồi giải nén vào thư mục sạch, làm theo mục 5.4 để chắc chắn cài từ ZIP chạy được.
 
 ## 12. Xử lý sự cố
 
