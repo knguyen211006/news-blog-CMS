@@ -1,0 +1,42 @@
+name: goc-nhin-docker
+
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:${CMS_PORT:-8088}:80"
+    environment:
+      CMS_DB_PASSWORD: ${CMS_DB_PASSWORD:?Run Start-Docker.ps1 to create the local configuration}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - cms_uploads:/var/www/html/uploads
+      - cms_storage:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1/') === false ? 1 : 0);"]
+      interval: 5s
+      timeout: 4s
+      retries: 15
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_DATABASE: news_blog_cms
+      MARIADB_USER: cms_app
+      MARIADB_PASSWORD: ${CMS_DB_PASSWORD:?Run Start-Docker.ps1 to create the local configuration}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - cms_database:/var/lib/mysql
+      - ./database/news_blog_cms.sql:/docker-entrypoint-initdb.d/01-demo.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+volumes:
+  cms_database:
+  cms_storage:
+  cms_uploads:
