@@ -59,19 +59,8 @@ Tài khoản đăng ký mới luôn là USER; chỉ Admin cấp quyền AUTHOR. 
 
 ## 4. Yêu cầu môi trường
 
-- PHP 8.1 trở lên (đã chạy trên PHP 8.2.12).
-- MySQL 8 hoặc MariaDB 10.4 trở lên (đã chạy trên MariaDB 10.4.32 của XAMPP).
-- Apache 2.4 với `mod_rewrite` và `AllowOverride All` cho thư mục chứa dự án.
-- PHP extension: `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session`, `openssl`. Bộ acceptance/HTTP smoke cần thêm `curl`.
-- Node.js và npm: **chỉ** cần nếu muốn chạy kiểm thử giao diện Playwright trong `e2e/`, không cần để chạy website.
-- Python 3: chỉ cần để chạy `scripts/package.py` (đóng gói).
-
-Kiểm tra nhanh PHP (đường dẫn dưới đây là mặc định của XAMPP trên Windows, đổi theo máy của bạn):
-
-```powershell
-& 'C:\xampp\php\php.exe' -v
-& 'C:\xampp\php\php.exe' -m
-```
+- Docker trên Windows: Docker Desktop ở chế độ Linux containers, Git và PowerShell. Có thể mở dự án bằng VS Code.
+- XAMPP: Apache 2.4 với `mod_rewrite` và `AllowOverride All`, PHP 8.1 trở lên và MySQL 8 hoặc MariaDB 10.4 trở lên. PHP cần `pdo_mysql`, `mbstring`, `fileinfo`, `dom`, `iconv`, `session` và `openssl`.
 
 ## 5. Cài đặt và chạy
 
@@ -148,151 +137,23 @@ Các extension cần thiết phải báo `OK`; script in phiên bản PHP và da
 
 6. Mở `http://localhost/news-blog-cms/`.
 
-Lưu ý: `config/local.php` và `config/test.php` chứa thông tin kết nối riêng của từng máy, **không** được commit và **không** nằm trong gói ZIP nộp. Có thể dùng `scripts/install.php` để cài tự động; script từ chối ghi đè database đã có bảng hoặc file cấu hình đã tồn tại.
+Giữ `config/local.php` ở máy chạy XAMPP vì tệp chứa thông tin kết nối của máy đó.
 
-## 6. Kiểm thử
+## 6. Cấu trúc thư mục
 
-Kiểm thử chạy trên **database riêng `news_blog_cms_test`**, không chạy trên database demo.
+| Đường dẫn | Nội dung |
+|---|---|
+| `index.php`, `config/routes.php` | Điểm vào và định tuyến |
+| `app/` | Xử lý yêu cầu, mô hình dữ liệu và giao diện PHP |
+| `assets/`, `vendor/` | CSS, JavaScript, ảnh minh họa mẫu và thư viện |
+| `Dockerfile`, `compose.yaml`, `docker/` | Cấu hình PHP/Apache và MariaDB trong Docker |
+| `database/schema.sql`, `database/news_blog_cms.sql` | Cấu trúc bảng và SQL mẫu để khởi tạo |
+| `scripts/check.php` | Công cụ chẩn đoán môi trường |
+| `storage/`, `uploads/` | Dữ liệu chạy và ảnh tải lên |
+| `THIRD-PARTY-NOTICES.md` | Thông báo giấy phép của thư viện |
 
-**Cảnh báo:** acceptance và mỗi lượt Playwright tự dọn và nạp lại database test trước khi chạy. Chỉ dùng với `news_blog_cms_test` qua `config/test.php`; dữ liệu thêm thủ công trong database test sẽ bị xóa.
+## 7. Xử lý sự cố
 
-### 6.1. Tạo cấu hình và database test (một lần)
-
-Chỉ chạy khi `news_blog_cms_test` chưa có bảng. Lệnh tạo database test và ghi `config/test.php`:
-
-```powershell
-cd <thư-mục-dự-án>
-& 'C:\xampp\php\php.exe' scripts/install.php --xampp=C:\xampp --test
-```
-
-### 6.2. Kiểm thử chấp nhận PHP (acceptance)
-
-Terminal 1, khởi động máy chủ test:
-
-```powershell
-cd <thư-mục-dự-án>
-$env:CMS_CONFIG = (Resolve-Path '.\config\test.php').Path
-& 'C:\xampp\php\php.exe' -S 127.0.0.1:8089 scripts/router.php
-```
-
-Terminal 2, chạy bộ kiểm thử:
-
-```powershell
-cd <thư-mục-dự-án>
-& 'C:\xampp\php\php.exe' tests/acceptance.php 'http://127.0.0.1:8089/news-blog-cms/'
-```
-
-Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Lần kiểm chứng ngày 07/11/2026 trên môi trường riêng đạt **89 PASS / 0 FAIL**; Playwright **43 passed / 0 failed** và HTTP smoke qua Apache **39 passed / 0 failed**. Nút chọn file Dark mode đạt tương phản **12,5685:1** trên desktop/mobile. Kết quả và phạm vi xác minh: `docs/SUBMISSION-CHECK.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
-
-### 6.3. Kiểm tra cú pháp PHP
-
-```powershell
-Get-ChildItem app,config,scripts,tests -Recurse -Filter *.php |
-    ForEach-Object { & 'C:\xampp\php\php.exe' -l $_.FullName }
-& 'C:\xampp\php\php.exe' -l index.php
-```
-
-### 6.4. Kiểm thử giao diện Playwright (tùy chọn)
-
-Bộ Playwright theo mô hình Page Object nằm trong `e2e/`, chạy trên Chromium desktop 1280px và mobile 375px; địa chỉ và tài khoản đọc từ `e2e/.env` (sao chép từ `e2e/.env.example`). Hướng dẫn cài đặt và chạy: xem `e2e/README.md`. Kết quả ghi trong `docs/SUBMISSION-CHECK.md`.
-
-Kiểm tra thủ công trên trình duyệt: `docs/MANUAL-TESTS.md`.
-
-`php tests/view-states.php` đã xác minh **12 trạng thái rỗng qua 10 ca render View** ngày 07/11/2026: không có PHP warning, mỗi trạng thái có icon/nội dung/CTA. Đây là kiểm tra DOM phía server, không phải xác minh hình ảnh của cả 12 trạng thái trên trình duyệt.
-
-## 7. Xem trước giao diện không ảnh hưởng database demo
-
-Khi chỉnh giao diện, có thể chạy máy chủ PHP tích hợp với database test, không cần chép sang Apache:
-
-```powershell
-cd <thư-mục-dự-án>
-$env:CMS_CONFIG = (Resolve-Path '.\config\test.php').Path
-& 'C:\xampp\php\php.exe' -S 127.0.0.1:8090 scripts/router.php
-```
-
-Mở `http://127.0.0.1:8090/news-blog-cms/`. Dữ liệu test vẫn có thể bị thay đổi khi thao tác trên website.
-
-## 8. Bảo mật
-
-- **SQL injection:** mọi truy vấn dùng PDO prepared statements.
-- **XSS:** nội dung thường được escape khi hiển thị; nội dung rich text lọc bằng HTML Purifier theo danh sách thẻ cho phép (loại `<script>`, `<iframe>`, thuộc tính sự kiện, URL `javascript:`); bình luận là văn bản thuần.
-- **CSRF:** thao tác gửi form để ghi dữ liệu dùng POST và kiểm tra token; thiếu token trả HTTP 419. GET không xóa hay sửa dữ liệu nội dung; ngoại lệ là đếm lượt xem bài.
-- **Phiên đăng nhập:** đổi session ID sau khi đăng nhập; cookie `HttpOnly`, `SameSite=Lax`; kiểm tra lại trạng thái tài khoản ở mỗi yêu cầu nên tài khoản bị khóa mất quyền ngay. Mật khẩu được băm, không lưu dạng thuần.
-- **Giới hạn tần suất:** đăng nhập sai nhiều lần và bình luận liên tiếp bị chặn bằng HTTP 429.
-- **Upload ảnh:** chỉ nhận JPEG/PNG/WebP tối đa 2 MB, kiểm tra MIME thực tế, đổi tên ngẫu nhiên; `uploads/.htaccess` khai báo chặn thực thi PHP, đã kiểm tra chặn PHP trên Apache riêng; cần giữ quy tắc này khi triển khai.
-- **Apache `.htaccess`:** cấu hình khai báo tắt liệt kê thư mục và chặn truy cập trực tiếp vào cấu hình, mã nguồn, SQL, log, tài liệu. Đã xác minh trên Apache 2.4 với cấu hình riêng ngày 07/11/2026 (39 ca đạt); xem `docs/SUBMISSION-CHECK.md`. PHP router không thay thế kiểm tra Apache. Khi triển khai, các URL sau phải trả 403 hoặc 404 và không lộ nội dung:
-  - `/news-blog-cms/config/local.php`
-  - `/news-blog-cms/.gitignore`
-  - `/news-blog-cms/README.md`
-  - `/news-blog-cms/database/`
-  - `/news-blog-cms/vendor/`
-  - `/news-blog-cms/storage/`
-
-## 9. Cơ sở dữ liệu
-
-Có 8 bảng InnoDB, charset utf8mb4: `users`, `categories`, `tags`, `posts`, `post_tags` (quan hệ nhiều–nhiều bài viết và thẻ), `comments` (tự tham chiếu `parent_id` cho trả lời), `post_history` (nhật ký thao tác trên bài viết), `rate_limits` (đếm giới hạn tần suất). Cấu trúc ở `database/schema.sql`; dữ liệu demo (5 tài khoản, 4 chuyên mục, 6 thẻ, 12 bài, 6 bình luận) ở `database/news_blog_cms.sql`. Chi tiết thiết kế: `docs/ARCHITECTURE.md`.
-
-## 10. Cấu trúc thư mục
-
-```text
-news-blog-cms/
-├── index.php                 Front controller
-├── .htaccess                 Chặn file nội bộ, tắt liệt kê thư mục
-├── app/
-│   ├── bootstrap.php, helpers.php
-│   ├── Core/                 DB, Auth, Security, View, HttpException
-│   ├── Controllers/          Auth, Public, Post, Admin, Comment
-│   ├── Models/               User, Post, Taxonomy, Comment
-│   └── Views/                Layout, auth, public, posts, admin, partials
-├── assets/                   CSS, JavaScript, ảnh SVG, thư viện soạn thảo Pell
-├── config/                   example.php, routes.php (local.php và test.php là cấu hình riêng, không nộp)
-├── database/                 schema.sql, news_blog_cms.sql
-├── docs/                     Kiến trúc, chức năng, kết quả kiểm thử, kiểm thử thủ công, môi trường
-├── e2e/                      Kiểm thử giao diện Playwright (tùy chọn)
-├── scripts/                  install.php, check.php, router.php, package.py
-├── storage/                  Session, cache, log
-├── tests/                    acceptance.php, view-contract.php, view-states.php, support/
-├── uploads/                  Ảnh tải lên
-└── vendor/htmlpurifier/      Thư viện lọc HTML
-```
-
-Tài liệu: `docs/ARCHITECTURE.md` (kiến trúc, bảng dữ liệu), `docs/FEATURES.md` (chức năng, phạm vi), `docs/SUBMISSION-CHECK.md` (kết quả kiểm thử), `docs/MANUAL-TESTS.md` (kiểm thử thủ công), `docs/ENVIRONMENT.md` (môi trường, giới hạn đã biết), `docs/FILE-LIST.txt` (danh sách file bàn giao), `THIRD-PARTY-NOTICES.md` (giấy phép thư viện).
-
-## 11. Git và đóng gói
-
-`config/local.php`, `config/test.php`, `e2e/.env`, `node_modules/`, trình duyệt của Playwright, session, log, ảnh upload và kết quả kiểm thử dạng JSON được loại khỏi Git và gói nộp. Trước khi commit, kiểm tra `git status` để không đưa cấu hình riêng vào.
-
-Tạo gói nộp (đường dẫn output phải chưa tồn tại, script không ghi đè):
-
-```powershell
-cd <thư-mục-dự-án>
-python scripts/package.py --output '<đường-dẫn>\news-blog-cms-submission.zip'
-Get-FileHash '<đường-dẫn>\news-blog-cms-submission.zip' -Algorithm SHA256
-```
-
-Sau khi tạo, mở thử ZIP để xác nhận không có `config/local.php`, `config/test.php`, `.git`; rồi giải nén vào thư mục sạch, làm theo mục 5.4 để chắc chắn cài từ ZIP chạy được.
-
-## 12. Xử lý sự cố
-
-- **404:** kiểm tra `index.php` nằm trực tiếp trong `news-blog-cms` (không bị lồng hai cấp), và Apache có `AllowOverride All`, `mod_rewrite` bật.
-- **Mất CSS hoặc ảnh:** kiểm tra `'base_path' => '/news-blog-cms'` trong `config/local.php`; thử mở `http://localhost/news-blog-cms/assets/css/app.css`.
-- **503 chưa cấu hình:** tạo `config/local.php` từ `config/example.php`.
-- **500:** xem `storage/app.log`; không bật hiển thị lỗi ra trình duyệt.
-- **Không kết nối được database:** kiểm tra MySQL đang chạy; xác minh host, port, tên database, user, mật khẩu.
-- **419:** tải lại trang để lấy token mới; kiểm tra quyền ghi thư mục `storage/`.
-- **409:** dữ liệu vừa được thay đổi ở phiên khác; tải lại rồi thao tác lại.
-- **429:** đã chạm giới hạn đăng nhập hoặc bình luận; chờ rồi thử lại.
-- **Upload thất bại:** dùng ảnh JPEG/PNG/WebP hợp lệ, tối đa 2 MB; kiểm tra quyền ghi `uploads/`.
-- **Tiêu đề tiếng Việt bị tách dấu:** nhấn `Ctrl+F5` để xóa cache CSS. Giao diện dùng font hệ thống Cambria (tiêu đề) và Segoe UI (nội dung) có sẵn trên Windows; trên máy không có các font này, trình duyệt dùng font dự phòng nên hình dạng chữ có thể khác.
-- **Lỗi bảng Aria hoặc bảng quyền của MySQL:** xem `docs/ENVIRONMENT.md`; sao lưu trước, không xóa `mysql/data`.
-
-## 13. Bản bàn giao đã rà soát 07/11/2026
-
-- Sơ đồ Use Case, ERD và hai Sequence nằm trong `diagrams/`.
-- Kiểm tra không ghi dữ liệu: `php tests/regression-readonly.php` và
-  `php tests/view-contract.php`; cả hai không cần database hoặc Git.
-- `view-contract.php` dùng baseline được bàn giao trong `tests/support/view-contracts.json`.
-- Menu Chuyên mục dẫn tới bộ lọc hiện hành, không phụ thuộc slug cố định.
-- Không dùng gói tổng hợp các bản cũ làm gói nộp: gói nộp chỉ chứa một phiên bản
-  và phải loại cấu hình thật, session, log, ảnh upload, lịch sử Git.
-- Kết quả xác minh mới và giới hạn môi trường: `docs/SUBMISSION-CHECK.md`.
+- Nếu cổng 8088 đã được dùng, đổi `CMS_PORT` trong `.env`, chạy lại Compose rồi mở cổng vừa chọn.
+- Nếu dịch vụ Docker chưa sẵn sàng, dùng `docker compose ps` để xem trạng thái và `docker compose logs --tail=100 web db` để xem nhật ký.
+- Nếu chạy bằng XAMPP và gặp lỗi 404 hoặc mất CSS, kiểm tra thư mục dự án trong `htdocs` và `base_path` trong `config/local.php`.
