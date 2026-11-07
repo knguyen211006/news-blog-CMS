@@ -2,7 +2,7 @@
 
 Ứng dụng dùng PHP 8.1 trở lên, MySQL 8 hoặc MariaDB 10.4 trở lên.
 Các phiên bản từng được ghi nhận: PHP 8.2.12, MariaDB 10.4.32, Apache 2.4.58.
-Kết quả chạy lại và phạm vi xác minh được ghi trong `TEST-RESULTS.md`.
+Kết quả chạy lại và phạm vi xác minh được ghi trong `SUBMISSION-CHECK.md`.
 
 ## Cấu hình cục bộ
 
@@ -24,7 +24,7 @@ xử lý. Không tự xóa thư mục dữ liệu, sửa hay dựng lại bảng
 
 Kiểm thử bằng PHP router không xác minh quy tắc `.htaccess` của Apache.
 Kiểm tra ZIP trên database trống trong cùng bộ XAMPP không tương đương cài đặt
-trên một bộ XAMPP mới. Các giới hạn và số liệu cụ thể xem `TEST-RESULTS.md`.
+trên một bộ XAMPP mới. Các giới hạn và số liệu cụ thể xem `SUBMISSION-CHECK.md`.
 
 ## Kiểm chứng mới 07/11/2026
 

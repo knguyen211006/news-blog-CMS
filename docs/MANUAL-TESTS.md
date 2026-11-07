@@ -1,6 +1,6 @@
 # Checklist demo và kiểm tra bằng trình duyệt
 
-Các mục dưới đây là hướng dẫn nghiệm thu trực quan, không được hiểu là đã thực hiện nếu không có bằng chứng trong TEST-RESULTS.md hoặc HANDOFF-VERIFICATION.md.
+Các mục dưới đây là hướng dẫn nghiệm thu trực quan, không được hiểu là đã thực hiện nếu không có bằng chứng trong SUBMISSION-CHECK.md.
 
 1. Mở Chrome/Edge, vào http://localhost/news-blog-cms/. Kiểm tra bài nổi bật, bài mới, ảnh và menu. Bấm Khám phá; tìm "website", lọc Công nghệ, chọn thẻ PHP; xóa bộ lọc; qua trang 2.
 2. Bấm Đăng ký, thử email đã có để thấy lỗi. Tạo email mới; tài khoản có vai trò Độc giả.

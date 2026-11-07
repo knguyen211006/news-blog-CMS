@@ -159,7 +159,7 @@ cd <thư-mục-dự-án>
 & 'C:\xampp\php\php.exe' tests/acceptance.php 'http://127.0.0.1:8089/news-blog-cms/'
 ```
 
-Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Lần kiểm chứng ngày 07/11/2026 trên môi trường riêng đạt **89 PASS / 0 FAIL**; Playwright **43 passed / 0 failed** và HTTP smoke qua Apache **39 passed / 0 failed**. Nút chọn file Dark mode đạt tương phản **12,5685:1** trên desktop/mobile. Kết quả và phạm vi xác minh: `docs/TEST-RESULTS.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
+Bộ này gồm 89 ca (xác thực, phân quyền theo vai trò và quyền sở hữu, CSRF, lọc HTML/XSS, SQL injection qua tìm kiếm, quy trình duyệt bài, chống duyệt trùng bằng `version`, bình luận, upload ảnh giả, giới hạn đăng nhập và bình luận, xóa mềm). Lần kiểm chứng ngày 07/11/2026 trên môi trường riêng đạt **89 PASS / 0 FAIL**; Playwright **43 passed / 0 failed** và HTTP smoke qua Apache **39 passed / 0 failed**. Nút chọn file Dark mode đạt tương phản **12,5685:1** trên desktop/mobile. Kết quả và phạm vi xác minh: `docs/SUBMISSION-CHECK.md`. Bộ test tạo dữ liệu trong database test; dừng máy chủ bằng `Ctrl+C` khi xong.
 
 ### 6.3. Kiểm tra cú pháp PHP
 
@@ -171,7 +171,7 @@ Get-ChildItem app,config,scripts,tests -Recurse -Filter *.php |
 
 ### 6.4. Kiểm thử giao diện Playwright (tùy chọn)
 
-Bộ Playwright theo mô hình Page Object nằm trong `e2e/`, chạy trên Chromium desktop 1280px và mobile 375px; địa chỉ và tài khoản đọc từ `e2e/.env` (sao chép từ `e2e/.env.example`). Hướng dẫn cài đặt và chạy: xem `e2e/README.md`. Kết quả ghi trong `docs/TEST-RESULTS.md`.
+Bộ Playwright theo mô hình Page Object nằm trong `e2e/`, chạy trên Chromium desktop 1280px và mobile 375px; địa chỉ và tài khoản đọc từ `e2e/.env` (sao chép từ `e2e/.env.example`). Hướng dẫn cài đặt và chạy: xem `e2e/README.md`. Kết quả ghi trong `docs/SUBMISSION-CHECK.md`.
 
 Kiểm tra thủ công trên trình duyệt: `docs/MANUAL-TESTS.md`.
 
@@ -233,7 +233,7 @@ news-blog-cms/
 └── vendor/htmlpurifier/      Thư viện lọc HTML
 ```
 
-Tài liệu: `docs/ARCHITECTURE.md` (kiến trúc, bảng dữ liệu), `docs/FEATURES.md` (chức năng, phạm vi), `docs/TEST-RESULTS.md` (kết quả kiểm thử), `docs/MANUAL-TESTS.md` (kiểm thử thủ công), `docs/ENVIRONMENT.md` (môi trường, giới hạn đã biết), `docs/FILE-LIST.txt` (danh sách file bàn giao), `THIRD-PARTY-NOTICES.md` (giấy phép thư viện).
+Tài liệu: `docs/ARCHITECTURE.md` (kiến trúc, bảng dữ liệu), `docs/FEATURES.md` (chức năng, phạm vi), `docs/SUBMISSION-CHECK.md` (kết quả kiểm thử), `docs/MANUAL-TESTS.md` (kiểm thử thủ công), `docs/ENVIRONMENT.md` (môi trường, giới hạn đã biết), `docs/FILE-LIST.txt` (danh sách file bàn giao), `THIRD-PARTY-NOTICES.md` (giấy phép thư viện).
 
 ## 11. Git và đóng gói
 

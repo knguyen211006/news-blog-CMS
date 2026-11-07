@@ -17,4 +17,4 @@ Không có gửi email/reset mật khẩu bằng email, đăng nhập mạng xã
 
 ## Hạn chế môi trường hiện tại
 
-Xem ENVIRONMENT.md và TEST-RESULTS.md để phân biệt các bước đã chạy thật với các bước cần thao tác người dùng. Không thay đổi hoặc sửa bảng hệ thống MySQL khi có lỗi sẵn trên máy.
+Xem ENVIRONMENT.md và SUBMISSION-CHECK.md để phân biệt các bước đã chạy thật với các bước cần thao tác người dùng. Không thay đổi hoặc sửa bảng hệ thống MySQL khi có lỗi sẵn trên máy.

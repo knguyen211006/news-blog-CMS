@@ -70,11 +70,8 @@ docs/ARCHITECTURE.md
 docs/ENVIRONMENT.md
 docs/FEATURES.md
 docs/FILE-LIST.txt
-docs/HANDOFF-VERIFICATION.md
 docs/MANUAL-TESTS.md
 docs/SUBMISSION-CHECK.md
-docs/TEST-RESULTS.md
-docs/UX-UI-VERIFICATION.md
 docs/diagrams/comment-sequence.mmd
 docs/diagrams/erd.mmd
 docs/diagrams/publishing-sequence.mmd
