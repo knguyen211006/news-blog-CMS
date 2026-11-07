@@ -1,1 +1,113 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="440" viewBox="0 0 800 440" role="img"><title>Minh họa công nghệ</title><rect width="800" height="440" fill="#d7e4de"/><g opacity=".3" stroke="#304f43" stroke-width="1"><path d="M40 40H140M40 40V140M660 400H760V300"/></g><rect x="175" y="65" width="440" height="280" rx="10" fill="#304f43"/><rect x="192" y="81" width="406" height="243" rx="3" fill="#f6f4e8"/><path d="M145 344H645L681 369H110Z" fill="#304f43"/><rect x="220" y="108" width="100" height="187" rx="2" fill="#b4ccbb"/><rect x="341" y="110" width="230" height="86" fill="#d6a66e"/><path d="M354 231H554M354 250H520M354 269H542" stroke="#304f43" stroke-width="7" opacity=".4"/><circle cx="546" cy="150" r="24" fill="#f4e4c9"/><path d="M340 195L408 131L462 195Z" fill="#304f43" opacity=".7"/><circle cx="105" cy="295" r="35" fill="#d6a66e"/><path d="M686 330V181M686 254Q628 218 637 184Q692 177 686 254M686 279Q740 236 733 210Q681 203 686 279" stroke="#304f43" stroke-width="9" fill="#b4ccbb"/><path d="M655 321H718L708 371H666Z" fill="#304f43"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img">
+  <title>Sơ đồ ERD 8 bảng và ràng buộc khóa ngoại trong database/schema.sql của Góc Nhìn</title>
+  <rect width="1280" height="720" fill="#FAF7F2"/>
+  <rect x="40" y="28" width="1200" height="54" rx="8" fill="#1E293B"/>
+  <text x="68" y="61" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF">SƠ ĐỒ QUAN HỆ DỮ LIỆU &amp; KHÓA NGOẠI (database/schema.sql — 8 BẢNG INNODB)</text>
+
+  <!-- Relationship Lines -->
+  <!-- users -> posts -->
+  <path d="M340 200 L480 200" stroke="#B84227" stroke-width="3.5" fill="none"/>
+  <text x="410" y="190" text-anchor="middle" font-family="monospace" font-size="12" font-weight="700" fill="#B84227">1 ───&lt; N (RESTRICT)</text>
+
+  <!-- categories -> posts -->
+  <path d="M340 390 L480 310" stroke="#0F766E" stroke-width="3.5" fill="none"/>
+  <text x="395" y="340" text-anchor="middle" font-family="monospace" font-size="12" font-weight="700" fill="#0F766E">1 ──&lt; N (RESTRICT)</text>
+
+  <!-- posts -> post_tags <- tags -->
+  <path d="M790 220 L920 220" stroke="#1D4ED8" stroke-width="3.5" fill="none"/>
+  <text x="855" y="210" text-anchor="middle" font-family="monospace" font-size="12" font-weight="700" fill="#1D4ED8">CASCADE</text>
+  <path d="M1070 300 L1070 360" stroke="#1D4ED8" stroke-width="3.5" fill="none"/>
+
+  <!-- posts -> comments & post_history -->
+  <path d="M635 420 L635 485" stroke="#78350F" stroke-width="3.5" fill="none"/>
+  <path d="M790 360 L920 530" stroke="#475569" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
+
+  <!-- TABLE 1: users -->
+  <g transform="translate(50, 110)">
+    <rect width="290" height="195" rx="8" fill="#FFFFFF" stroke="#1E293B" stroke-width="2"/>
+    <rect width="290" height="36" rx="8" fill="#1E293B"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#F4B886">users</text>
+    <text x="16" y="62" font-family="monospace" font-size="13" fill="#1E293B">🔑 id BIGINT PK</text>
+    <text x="16" y="88" font-family="monospace" font-size="13" fill="#334155">   name VARCHAR(100)</text>
+    <text x="16" y="114" font-family="monospace" font-size="13" fill="#334155">   email VARCHAR(190) UNIQUE</text>
+    <text x="16" y="140" font-family="monospace" font-size="13" font-weight="700" fill="#B84227">   role ENUM('USER','AUTHOR','ADMIN')</text>
+    <text x="16" y="166" font-family="monospace" font-size="13" fill="#334155">   is_locked TINYINT(1)</text>
+  </g>
+
+  <!-- TABLE 2: categories -->
+  <g transform="translate(50, 335)">
+    <rect width="290" height="145" rx="8" fill="#FFFFFF" stroke="#0F766E" stroke-width="2"/>
+    <rect width="290" height="36" rx="8" fill="#0F766E"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#FFFFFF">categories</text>
+    <text x="16" y="62" font-family="monospace" font-size="13" fill="#1E293B">🔑 id BIGINT PK</text>
+    <text x="16" y="88" font-family="monospace" font-size="13" fill="#334155">   name VARCHAR(100)</text>
+    <text x="16" y="114" font-family="monospace" font-size="13" fill="#334155">   slug VARCHAR(180) UNIQUE</text>
+  </g>
+
+  <!-- TABLE 3: rate_limits -->
+  <g transform="translate(50, 510)">
+    <rect width="290" height="145" rx="8" fill="#FFFFFF" stroke="#64748B" stroke-width="2"/>
+    <rect width="290" height="36" rx="8" fill="#475569"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#FFFFFF">rate_limits</text>
+    <text x="16" y="62" font-family="monospace" font-size="13" fill="#1E293B">🔑 bucket CHAR(64) PK</text>
+    <text x="16" y="88" font-family="monospace" font-size="13" fill="#334155">   attempts INT UNSIGNED</text>
+    <text x="16" y="114" font-family="monospace" font-size="13" fill="#334155">   reset_at DATETIME</text>
+  </g>
+
+  <!-- TABLE 4 (CENTER): posts -->
+  <g transform="translate(480, 110)">
+    <rect width="310" height="310" rx="8" fill="#FFFFFF" stroke="#B84227" stroke-width="3"/>
+    <rect width="310" height="38" rx="8" fill="#B84227"/>
+    <text x="16" y="25" font-family="monospace" font-size="16" font-weight="700" fill="#FFFFFF">posts (Bảng trung tâm)</text>
+    <text x="16" y="64" font-family="monospace" font-size="13" fill="#1E293B">🔑 id BIGINT PK</text>
+    <text x="16" y="90" font-family="monospace" font-size="13" font-weight="700" fill="#B84227">🔗 author_id FK → users(id)</text>
+    <text x="16" y="116" font-family="monospace" font-size="13" font-weight="700" fill="#0F766E">🔗 category_id FK → categories(id)</text>
+    <text x="16" y="142" font-family="monospace" font-size="13" fill="#334155">   title, slug UNIQUE, excerpt</text>
+    <text x="16" y="168" font-family="monospace" font-size="13" fill="#334155">   status ENUM('draft','pending',...)</text>
+    <text x="16" y="194" font-family="monospace" font-size="13" fill="#334155">   rejection_reason VARCHAR(2000)</text>
+    <text x="16" y="220" font-family="monospace" font-size="13" font-weight="700" fill="#1D4ED8">   version INT (Khóa lạc quan)</text>
+    <text x="16" y="246" font-family="monospace" font-size="13" fill="#334155">   views BIGINT, is_featured</text>
+    <text x="16" y="272" font-family="monospace" font-size="13" fill="#334155">   published_at, deleted_at</text>
+  </g>
+
+  <!-- TABLE 5: comments -->
+  <g transform="translate(480, 485)">
+    <rect width="310" height="170" rx="8" fill="#FFFFFF" stroke="#78350F" stroke-width="2"/>
+    <rect width="310" height="36" rx="8" fill="#78350F"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#FFFFFF">comments (Tự tham chiếu 2 cấp)</text>
+    <text x="16" y="62" font-family="monospace" font-size="13" fill="#1E293B">🔑 id BIGINT PK</text>
+    <text x="16" y="88" font-family="monospace" font-size="13" fill="#78350F">🔗 post_id FK → posts(id)</text>
+    <text x="16" y="114" font-family="monospace" font-size="13" fill="#78350F">🔗 user_id FK → users(id)</text>
+    <text x="16" y="140" font-family="monospace" font-size="13" font-weight="700" fill="#B84227">🔗 parent_id FK → comments(id)</text>
+  </g>
+
+  <!-- TABLE 6: post_tags -->
+  <g transform="translate(920, 150)">
+    <rect width="310" height="150" rx="8" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2"/>
+    <rect width="310" height="36" rx="8" fill="#1D4ED8"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#FFFFFF">post_tags (Bảng trung gian N-N)</text>
+    <text x="16" y="64" font-family="monospace" font-size="13" fill="#1E3A8A">🔑🔗 post_id FK → posts(id)</text>
+    <text x="16" y="92" font-family="monospace" font-size="13" fill="#1E3A8A">🔑🔗 tag_id FK → tags(id)</text>
+    <text x="16" y="122" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1D4ED8">ON DELETE CASCADE: Xóa thẻ an toàn</text>
+  </g>
+
+  <!-- TABLE 7: tags -->
+  <g transform="translate(920, 350)">
+    <rect width="310" height="120" rx="8" fill="#FFFFFF" stroke="#1D4ED8" stroke-width="2"/>
+    <rect width="310" height="36" rx="8" fill="#1E40AF"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#FFFFFF">tags</text>
+    <text x="16" y="64" font-family="monospace" font-size="13" fill="#1E293B">🔑 id BIGINT PK</text>
+    <text x="16" y="92" font-family="monospace" font-size="13" fill="#334155">   name, slug UNIQUE</text>
+  </g>
+
+  <!-- TABLE 8: post_history -->
+  <g transform="translate(920, 500)">
+    <rect width="310" height="155" rx="8" fill="#FFFFFF" stroke="#475569" stroke-width="2"/>
+    <rect width="310" height="36" rx="8" fill="#334155"/>
+    <text x="16" y="24" font-family="monospace" font-size="15" font-weight="700" fill="#FFFFFF">post_history (Nhật ký duyệt)</text>
+    <text x="16" y="62" font-family="monospace" font-size="13" fill="#1E293B">🔑 id BIGINT PK</text>
+    <text x="16" y="88" font-family="monospace" font-size="13" fill="#334155">🔗 post_id FK, actor_id FK</text>
+    <text x="16" y="114" font-family="monospace" font-size="13" fill="#334155">   action, from_status, to_status</text>
+    <text x="16" y="140" font-family="monospace" font-size="13" fill="#334155">   note VARCHAR(2000)</text>
+  </g>
+</svg>
