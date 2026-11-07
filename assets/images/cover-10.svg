@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img">
+  <title>Sơ đồ tư duy ôn tập hệ thống CMS của nhóm sau 1 tuần chỉnh sửa</title>
+  <defs>
+    <pattern id="dotgrid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="14" cy="14" r="1.3" fill="#CBD5E1"/>
+    </pattern>
+  </defs>
+  <!-- Notebook Paper Background -->
+  <rect width="1280" height="720" fill="#FCFBF7"/>
+  <rect width="1280" height="720" fill="url(#dotgrid)"/>
+  <!-- Top Notebook Header Strip -->
+  <rect x="48" y="32" width="1184" height="54" rx="8" fill="#F1ECE1" stroke="#D6CFC2" stroke-width="1.5"/>
+  <text x="72" y="65" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="18" font-weight="700" fill="#1E293B">NHẬT KÝ ÔN TẬP NHÓM 5 THÀNH VIÊN · SƠ ĐỒ TƯ DUY MÔN LẬP TRÌNH WEB (TUẦN 1 → TUẦN 2)</text>
+  <rect x="1010" y="44" width="204" height="30" rx="15" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.5"/>
+  <text x="1112" y="64" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#166534">✓ Bản đã sửa: Ngày 7</text>
+
+  <!-- Connector Curves from Center (640, 390) -->
+  <!-- Top-Left (Crossed out Day 1) -->
+  <path d="M520 355 C430 330, 380 250, 310 220" fill="none" stroke="#94A3B8" stroke-width="4" stroke-dasharray="8 6"/>
+  <!-- Top-Right (Workflow Status - Revised Day 7) -->
+  <path d="M760 355 C850 320, 890 230, 955 205" fill="none" stroke="#B84227" stroke-width="5"/>
+  <!-- Bottom-Left (RBAC Roles) -->
+  <path d="M520 425 C430 455, 370 520, 300 545" fill="none" stroke="#0F766E" stroke-width="5"/>
+  <!-- Bottom-Right (Database & Foreign Keys) -->
+  <path d="M760 425 C850 455, 900 525, 960 545" fill="none" stroke="#1D4ED8" stroke-width="5"/>
+
+  <!-- CENTER NODE -->
+  <ellipse cx="640" cy="390" rx="135" ry="64" fill="#1E293B" stroke="#B84B31" stroke-width="5"/>
+  <text x="640" y="382" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">GÓC NHÌN CMS</text>
+  <text x="640" y="410" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="600" fill="#F4B886">PHP MVC · 8 Bảng MySQL</text>
+
+  <!-- BRANCH 1 (TOP-LEFT): BEFORE (DAY 1 - CROSSED OUT) -->
+  <g>
+    <rect x="56" y="112" width="380" height="175" rx="12" fill="#FFF1F2" stroke="#E11D48" stroke-width="2" stroke-dasharray="6 4"/>
+    <rect x="72" y="98" width="230" height="28" rx="6" fill="#E11D48"/>
+    <text x="187" y="117" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">✕ NHÁNH CŨ NGÀY 1 (ĐÃ BỎ)</text>
+    <text x="76" y="152" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" fill="#64748B" text-decoration="line-through">“Bài viết có nhiều trạng thái và bình luận</text>
+    <text x="76" y="174" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" fill="#64748B" text-decoration="line-through">cũng có trạng thái duyệt chung trong một</text>
+    <text x="76" y="196" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" fill="#64748B" text-decoration="line-through">luồng kiểm duyệt của quản trị viên...”</text>
+    <!-- Strike-through red lines -->
+    <line x1="70" y1="145" x2="410" y2="200" stroke="#E11D48" stroke-width="2.5" opacity="0.7"/>
+    <rect x="74" y="214" width="344" height="56" rx="6" fill="#FFE4E6"/>
+    <text x="86" y="236" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#9F1239">Lý do sửa sau 1 tuần:</text>
+    <text x="86" y="256" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#881337">Chép nguyên câu dài, lẫn lộn bảng posts &amp; comments</text>
+  </g>
+
+  <!-- BRANCH 2 (TOP-RIGHT): AFTER (DAY 7 - POST WORKFLOW) -->
+  <g>
+    <rect x="815" y="110" width="415" height="190" rx="12" fill="#FFF7ED" stroke="#B84227" stroke-width="3"/>
+    <rect x="835" y="96" width="290" height="28" rx="6" fill="#B84227"/>
+    <text x="980" y="115" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">✓ ĐÃ SỬA NGÀY 7: LUỒNG DUYỆT BÀI</text>
+    <!-- Workflow boxes -->
+    <rect x="835" y="140" width="82" height="36" rx="6" fill="#E2E8F0" stroke="#475569" stroke-width="1.5"/>
+    <text x="876" y="163" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#1E293B">draft</text>
+    <text x="929" y="163" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="16" font-weight="700" fill="#B84227">→</text>
+    <rect x="945" y="140" width="90" height="36" rx="6" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+    <text x="990" y="163" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400E">pending</text>
+    <text x="1047" y="163" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="16" font-weight="700" fill="#B84227">→</text>
+    <rect x="1065" y="140" width="145" height="36" rx="6" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.5"/>
+    <text x="1137" y="163" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#166534">published</text>
+
+    <text x="835" y="206" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="600" fill="#7C2D12">• Trả bài (rejected): Bắt buộc nhập lý do ≥ 5 ký tự</text>
+    <text x="835" y="232" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="600" fill="#7C2D12">• Khóa phiên bản (posts.version): Chống duyệt trùng</text>
+    <text x="835" y="258" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="600" fill="#7C2D12">• Lưu vết: Ghi vào bảng post_history mỗi lần chuyển</text>
+    <text x="835" y="284" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#9A3412">→ Thu gọn còn từ khóa + tên cột thực tế, nhớ ngay khi code!</text>
+  </g>
+
+  <!-- BRANCH 3 (BOTTOM-LEFT): RBAC & SECURITY -->
+  <g>
+    <rect x="56" y="465" width="390" height="205" rx="12" fill="#F0FDFA" stroke="#0F766E" stroke-width="2.5"/>
+    <rect x="76" y="451" width="245" height="28" rx="6" fill="#0F766E"/>
+    <text x="198" y="470" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">2. PHÂN QUYỀN &amp; BẢO MẬT</text>
+    <text x="76" y="505" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#115E59">• USER (Độc giả): Đọc bài, gửi bình luận (rate-limit)</text>
+    <text x="76" y="533" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#115E59">• AUTHOR (Tác giả): Sửa nháp/bài bị trả của chính mình</text>
+    <text x="76" y="561" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#115E59">• ADMIN (Quản trị): Duyệt/trả bài, khóa user, danh mục</text>
+    <line x1="76" y1="578" x2="426" y2="578" stroke="#99F6E4" stroke-width="1.5"/>
+    <text x="76" y="604" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#0F766E">✓ Chống XSS: HTML Purifier lọc nội dung bài viết</text>
+    <text x="76" y="628" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#0F766E">✓ Chống giả mạo: _csrf token + kiểm tra MIME ảnh thật</text>
+    <text x="76" y="652" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#0F766E">✓ Không tự hạ quyền/khóa tài khoản Admin cuối cùng</text>
+  </g>
+
+  <!-- BRANCH 4 (BOTTOM-RIGHT): DATABASE FOREIGN KEYS -->
+  <g>
+    <rect x="815" y="465" width="415" height="205" rx="12" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.5"/>
+    <rect x="835" y="451" width="265" height="28" rx="6" fill="#1D4ED8"/>
+    <text x="967" y="470" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">3. LIÊN KẾT BẢNG &amp; KHÓA NGOẠI</text>
+    <text x="835" y="505" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#1E3A8A">• categories (1) ──&lt; posts (N): ON DELETE RESTRICT</text>
+    <text x="850" y="527" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#1E40AF">(Chặn xóa chuyên mục đang có bài viết)</text>
+    <text x="835" y="555" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#1E3A8A">• posts (N) &gt;──&lt; tags (N): qua bảng post_tags</text>
+    <text x="850" y="577" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#1E40AF">(ON DELETE CASCADE: xóa thẻ chỉ gỡ liên kết trung gian)</text>
+    <text x="835" y="605" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#1E3A8A">• comments.parent_id ──&gt; comments.id (Tối đa 2 cấp)</text>
+    <text x="850" y="627" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#1E40AF">(Ẩn bình luận gốc vẫn giữ phản hồi đã duyệt bên dưới)</text>
+  </g>
+</svg>

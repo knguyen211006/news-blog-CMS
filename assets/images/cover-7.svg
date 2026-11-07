@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img">
+  <title>Bảng phân công và thỏa thuận làm việc nhóm 5 thành viên dự án Góc Nhìn</title>
+  <rect width="1280" height="720" fill="#111827"/>
+  <!-- Header -->
+  <rect x="44" y="32" width="1192" height="62" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="72" y="70" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="20" font-weight="700" fill="#F8FAFC">THỎA THUẬN LÀM VIỆC NHÓM · ĐỒ ÁN NEWS-BLOG-CMS (5 THÀNH VIÊN)</text>
+  <rect x="975" y="46" width="235" height="34" rx="17" fill="#065F46"/>
+  <text x="1092" y="68" text-anchor="middle" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" font-weight="700" fill="#D1FAE5">89 PHP Pass · 43 E2E Pass</text>
+
+  <!-- 3 Columns: Team Roles, Git & DB Rules, Definition of Done -->
+  <!-- Col 1: 5 Members -->
+  <rect x="44" y="118" width="380" height="558" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="68" y="156" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#F4B886">1. PHÂN CHIA PHỤ TRÁCH THEO ĐẦU RA</text>
+
+  <g font-family="'Segoe UI', system-ui, Arial, sans-serif">
+    <rect x="68" y="176" width="332" height="82" rx="8" fill="#0F172A" stroke="#475569"/>
+    <text x="86" y="204" font-size="15" font-weight="700" fill="#FFFFFF">Nguyễn Khôi Nguyên (Nhóm trưởng)</text>
+    <text x="86" y="228" font-size="12.5" fill="#94A3B8">Kiến trúc Core, phân quyền ADMIN, tổng hợp</text>
+    <text x="86" y="246" font-size="12.5" fill="#34D399">Đầu ra: app/Core/*, AdminController, tích hợp</text>
+
+    <rect x="68" y="272" width="332" height="82" rx="8" fill="#0F172A" stroke="#475569"/>
+    <text x="86" y="300" font-size="15" font-weight="700" fill="#FFFFFF">Nguyễn Lê Duy Ân</text>
+    <text x="86" y="324" font-size="12.5" fill="#94A3B8">Luồng biên tập bài viết &amp; lịch sử trạng thái</text>
+    <text x="86" y="342" font-size="12.5" fill="#34D399">Đầu ra: Post.php, PostController, post_history</text>
+
+    <rect x="68" y="368" width="332" height="82" rx="8" fill="#0F172A" stroke="#475569"/>
+    <text x="86" y="396" font-size="15" font-weight="700" fill="#FFFFFF">Nguyễn Trí Phong</text>
+    <text x="86" y="420" font-size="12.5" fill="#94A3B8">Giao diện đọc báo, tìm kiếm &amp; lọc chuyên mục</text>
+    <text x="86" y="438" font-size="12.5" fill="#34D399">Đầu ra: PublicController, Views/public/*, CSS</text>
+
+    <rect x="68" y="464" width="332" height="82" rx="8" fill="#0F172A" stroke="#475569"/>
+    <text x="86" y="492" font-size="15" font-weight="700" fill="#FFFFFF">Lê Tuấn Quy &amp; Võ Tấn Tài</text>
+    <text x="86" y="516" font-size="12.5" fill="#94A3B8">Bình luận 2 cấp, giới hạn tần suất &amp; kiểm thử</text>
+    <text x="86" y="534" font-size="12.5" fill="#34D399">Đầu ra: Comment.php, rate_limits, tests/*, e2e/*</text>
+
+    <rect x="68" y="564" width="332" height="90" rx="8" fill="#172554" stroke="#3B82F6"/>
+    <text x="86" y="592" font-size="13.5" font-weight="700" fill="#93C5FD">Nguyên tắc phối hợp:</text>
+    <text x="86" y="614" font-size="12.5" fill="#DBEAFE">Không đợi cuối kỳ mới ghép code. Mỗi tối thứ Tư</text>
+    <text x="86" y="634" font-size="12.5" fill="#DBEAFE">và Chủ Nhật cả nhóm ghép nhánh lên bản chạy thử.</text>
+  </g>
+
+  <!-- Col 2: 3 Small Agreements That Saved the Project -->
+  <rect x="450" y="118" width="380" height="558" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="474" y="156" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#38BDF8">2. BA THỎA THUẬN NHỎ GIỮ DỰ ÁN ỔN ĐỊNH</text>
+
+  <g font-family="'Segoe UI', system-ui, Arial, sans-serif">
+    <rect x="474" y="176" width="332" height="145" rx="8" fill="#0F172A" stroke="#0284C7"/>
+    <text x="494" y="206" font-size="14.5" font-weight="700" fill="#38BDF8">Thỏa thuận #1: Tách cấu hình máy cá nhân</text>
+    <text x="494" y="232" font-size="13" fill="#CBD5E1">• Không đẩy config/local.php lên Git chung vì mỗi</text>
+    <text x="494" y="254" font-size="13" fill="#CBD5E1">  máy trong nhóm dùng cổng MySQL khác nhau.</text>
+    <text x="494" y="278" font-size="13" fill="#CBD5E1">• Dùng config/example.php và scripts/build-demo.php</text>
+    <text x="494" y="300" font-size="13" fill="#CBD5E1">  để tạo database mẫu giống hệt nhau trong 5 giây.</text>
+
+    <rect x="474" y="340" width="332" height="145" rx="8" fill="#0F172A" stroke="#D97706"/>
+    <text x="494" y="370" font-size="14.5" font-weight="700" fill="#FBBF24">Thỏa thuận #2: Cô lập Database kiểm thử</text>
+    <text x="494" y="396" font-size="13" fill="#CBD5E1">• Mọi bài test tự động chỉ được chạy trên DB riêng</text>
+    <text x="494" y="418" font-size="13" fill="#CBD5E1">  tên là news_blog_cms_test.</text>
+    <text x="494" y="442" font-size="13" fill="#CBD5E1">• Tuyệt đối không xóa hay ghi đè dữ liệu bài viết</text>
+    <text x="494" y="464" font-size="13" fill="#CBD5E1">  đang trình chiếu trên news_blog_cms chính.</text>
+
+    <rect x="474" y="504" width="332" height="150" rx="8" fill="#0F172A" stroke="#10B981"/>
+    <text x="494" y="534" font-size="14.5" font-weight="700" fill="#34D399">Thỏa thuận #3: Hợp đồng Giao diện (View)</text>
+    <text x="494" y="560" font-size="13" fill="#CBD5E1">• Khi sửa CSS/HTML, không tự ý đổi tên trường</text>
+    <text x="494" y="582" font-size="13" fill="#CBD5E1">  name="", action="" hoặc xóa _csrf của Backend.</text>
+    <text x="494" y="606" font-size="13" fill="#CBD5E1">• Chạy php tests/view-contract.php để kiểm tra</text>
+    <text x="494" y="628" font-size="13" fill="#CBD5E1">  trước khi bàn giao cho thành viên khác.</text>
+  </g>
+
+  <!-- Col 3: Verification Checklist -->
+  <rect x="856" y="118" width="380" height="558" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="880" y="156" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#34D399">3. DẤU HIỆU HOÀN THÀNH (DEFINITION OF DONE)</text>
+
+  <g font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13.5" fill="#E2E8F0">
+    <rect x="880" y="176" width="332" height="478" rx="8" fill="#0F172A" stroke="#475569"/>
+    <text x="900" y="212" font-weight="700" fill="#34D399">☑ Luồng bài viết 4 trạng thái</text>
+    <text x="918" y="236" font-size="12.5" fill="#94A3B8">Nháp → Chờ duyệt → Xuất bản / Trả bài kèm lý do</text>
+
+    <text x="900" y="276" font-weight="700" fill="#34D399">☑ Chống xung đột phiên bản (Optimistic Lock)</text>
+    <text x="918" y="300" font-size="12.5" fill="#94A3B8">Kiểm tra posts.version &amp; comments.version (HTTP 409)</text>
+
+    <text x="900" y="340" font-weight="700" fill="#34D399">☑ Bảo mật đầu vào &amp; tải tệp</text>
+    <text x="918" y="364" font-size="12.5" fill="#94A3B8">Kiểm tra MIME thực bằng finfo + chặn thực thi ở /uploads</text>
+
+    <text x="900" y="404" font-weight="700" fill="#34D399">☑ Khả năng truy cập &amp; Đáp ứng thiết bị</text>
+    <text x="918" y="428" font-size="12.5" fill="#94A3B8">Không tràn ngang ở 320px, vùng chạm ≥ 44px, Sáng/Tối</text>
+
+    <text x="900" y="468" font-weight="700" fill="#34D399">☑ Bộ kiểm thử tự động xanh 100%</text>
+    <text x="918" y="492" font-size="12.5" fill="#94A3B8">• tests/regression-readonly.php: 11 / 11 PASS</text>
+    <text x="918" y="514" font-size="12.5" fill="#94A3B8">• tests/view-contract.php: 0 missing contracts</text>
+    <text x="918" y="536" font-size="12.5" fill="#94A3B8">• tests/acceptance.php: 89 / 89 PASS</text>
+    <text x="918" y="558" font-size="12.5" fill="#94A3B8">• Playwright E2E + axe WCAG AA: 43 / 43 PASS</text>
+
+    <rect x="900" y="582" width="292" height="52" rx="6" fill="#064E3B"/>
+    <text x="1046" y="613" text-anchor="middle" font-size="13" font-weight="700" fill="#A7F3D0">Sẵn sàng chạy trên XAMPP Localhost</text>
+  </g>
+</svg>

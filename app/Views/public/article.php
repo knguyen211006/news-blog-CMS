@@ -162,3 +162,18 @@
   </div>
 </section>
 <?php endif ?>
+
+<?php if (!empty($related)): ?>
+<section class="related-section" aria-label="Bài cùng chuyên mục" data-testid="article-related-section">
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">KHÁM PHÁ THÊM TRONG CHUYÊN MỤC <?= e($post['category_name']) ?></span>
+      <h2>Bài cùng chuyên mục</h2>
+    </div>
+    <a class="text-link" href="<?= e(url('articles', ['category' => $post['category_slug'] ?? ''])) ?>">Xem chuyên mục ↗</a>
+  </div>
+  <div class="story-grid" data-testid="article-related-grid">
+    <?php foreach ($related as $story) require ROOT . '/app/Views/partials/card.php'; ?>
+  </div>
+</section>
+<?php endif ?>
