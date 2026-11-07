@@ -96,6 +96,7 @@ final class Post {
         $total=(int)DB::scalar("SELECT COUNT(*) FROM posts p JOIN users u ON u.id=p.author_id LEFT JOIN categories c ON c.id=p.category_id WHERE $condition",$params);
         $page=max(1,min($page,max(1,(int)ceil($total/$size)))); $offset=($page-1)*$size;
         $items=DB::all("SELECT p.*,u.name author_name,c.name category_name,c.slug category_slug FROM posts p JOIN users u ON u.id=p.author_id LEFT JOIN categories c ON c.id=p.category_id WHERE $condition ORDER BY p.published_at DESC,p.id DESC LIMIT $size OFFSET $offset",$params);
+        $items=array_map('topic_cover',$items);
         return compact('items','page','total','size');
     }
 }

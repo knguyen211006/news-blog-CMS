@@ -1,9 +1,6 @@
 <section class="home-intro">
-  <div>
-    <span class="eyebrow">TẠP CHÍ CỦA NHỮNG ĐIỀU ĐÁNG KỂ</span>
-    <h1>Đọc một câu chuyện.<br>Mở thêm một <em>góc nhìn.</em></h1>
-  </div>
-  <p>Từ công nghệ đến đời sống, từ những điều nhỏ bé đến ý tưởng lớn. Tìm cảm hứng trong những câu chuyện của cộng đồng.</p>
+  <h1>Góc nhìn từ giảng đường &amp; <em>dự án thực tế.</em></h1>
+  <p>Ghi chép hàng tuần của nhóm về lập trình PHP, thiết kế giao diện dễ đọc và phương pháp học tập.</p>
 </section>
 
 <nav class="category-strip" aria-label="Chuyên mục" data-testid="category-strip">
@@ -28,7 +25,7 @@
   <article class="lead-story" data-testid="home-featured-article">
     <a class="lead-image" href="<?= e(url('article', ['slug' => $lead['slug']])) ?>">
       <img src="<?= e(asset($lead['cover_image'] ?: 'assets/images/cover-1.svg')) ?>" alt="<?= e($lead['title']) ?>">
-      <span class="feature-label">LỰA CHỌN CỦA BIÊN TẬP VIÊN</span>
+      <span class="feature-label">BÀI CHỦ LỰC CỦA NHÓM</span>
     </a>
     <div class="lead-content">
       <span class="eyebrow"><?= e($lead['category_name']) ?> · <?= date('d.m.Y', strtotime($lead['published_at'])) ?></span>
@@ -42,24 +39,18 @@
   </article>
 
   <aside class="featured-aside">
-    <span class="eyebrow">ĐÁNG CHÚ Ý</span>
+    <span class="eyebrow">ĐÁNG CHÚ Ý TRONG TUẦN</span>
     <?php foreach (array_slice($featured, 1) as $i => $story): ?>
       <article class="side-story" data-testid="home-side-article">
         <span class="story-number">0<?= $i + 1 ?></span>
         <div>
           <span class="eyebrow"><?= e($story['category_name']) ?></span>
           <h3 class="line-clamp-2"><a href="<?= e(url('article', ['slug' => $story['slug']])) ?>"><?= e($story['title']) ?></a></h3>
-          <p class="line-clamp-3"><?= e(excerpt($story['excerpt'], 105)) ?></p>
+          <p class="line-clamp-3"><?= e(excerpt($story['excerpt'], 115)) ?></p>
           <a class="text-link" href="<?= e(url('article', ['slug' => $story['slug']])) ?>">Đọc tiếp ↗</a>
         </div>
       </article>
     <?php endforeach ?>
-    <div class="join-note">
-      <span class="eyebrow">CÂU CHUYỆN TIẾP THEO</span>
-      <h3>Có thể bắt đầu<br>từ chính bạn.</h3>
-      <p>Đăng ký để cùng trao đổi và chia sẻ góc nhìn của mình.</p>
-      <a href="<?= e(url('register')) ?>">Tham gia cộng đồng →</a>
-    </div>
   </aside>
 </section>
 <?php endif ?>

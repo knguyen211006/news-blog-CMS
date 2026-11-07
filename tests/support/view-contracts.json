@@ -249,7 +249,7 @@
             "<?=e(url())?>": 3,
             "<?=$route===''?'active':''?>": 1,
             "<?=$route==='articles'?'active':''?>": 1,
-            "<?=e(url('articles'))?>": 3,
+            "<?=e(url('articles'))?>": 2,
             "<?phpif($viewer):?>": 1,
             "<?=e(url('profile'))?>": 1,
             "<?=e(excerpt($viewer['name'],25))?>": 1,
@@ -286,7 +286,6 @@
             "href=\"#main\"": 1,
             "href=\"__PHP_PD89ZSh1cmwoKSk/Pg==__\"": 3,
             "href=\"__PHP_PD89ZSh1cmwoJ2FydGljbGVzJykpPz4=__\"": 2,
-            "href=\"__PHP_PD89ZSh1cmwoJ2FydGljbGVzJykpPz4=__#category\"": 1,
             "href=\"__PHP_PD89ZSh1cmwoJ3Byb2ZpbGUnKSk/Pg==__\"": 1,
             "href=\"__PHP_PD89ZSh1cmwoJHZpZXdlclsncm9sZSddPT09J0FETUlOJz8nYWRtaW4nOidhdXRob3IvcG9zdHMnKSk/Pg==__\"": 1,
             "action=\"__PHP_PD89ZSh1cmwoJ2xvZ291dCcpKT8+__\"": 1,
@@ -580,18 +579,18 @@
             "<?=e($story['category_name'])?>": 1,
             "<?=e(url('article',['slug'=>$story['slug']]))?>": 2,
             "<?=e($story['title'])?>": 1,
-            "<?=e(excerpt($story['excerpt'],105))?>": 1,
-            "<?=e(url('register'))?>": 2,
+            "<?=e(url('register'))?>": 1,
             "<?phpif(!$latest):?>": 1,
             "<?phpelse:?>": 1,
-            "<?phpforeach($latestas$story)requireROOT.'/app/Views/partials/card.php';?>": 1
+            "<?phpforeach($latestas$story)requireROOT.'/app/Views/partials/card.php';?>": 1,
+            "<?=e(excerpt($story['excerpt'],115))?>": 1
         },
         "attributes": {
             "href=\"__PHP_PD89ZSh1cmwoJ2FydGljbGVzJykpPz4=__\"": 3,
             "href=\"__PHP_PD89ZSh1cmwoJ2FydGljbGVzJyxbJ2NhdGVnb3J5Jz0+JGNbJ3NsdWcnXV0pKT8+__\"": 1,
             "href=\"__PHP_PD89ZSh1cmwoJ2FydGljbGUnLFsnc2x1Zyc9PiRsZWFkWydzbHVnJ11dKSk/Pg==__\"": 3,
             "href=\"__PHP_PD89ZSh1cmwoJ2FydGljbGUnLFsnc2x1Zyc9PiRzdG9yeVsnc2x1ZyddXSkpPz4=__\"": 2,
-            "href=\"__PHP_PD89ZSh1cmwoJ3JlZ2lzdGVyJykpPz4=__\"": 2
+            "href=\"__PHP_PD89ZSh1cmwoJ3JlZ2lzdGVyJykpPz4=__\"": 1
         }
     }
 }

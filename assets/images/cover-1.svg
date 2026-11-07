@@ -1,1 +1,92 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="440" viewBox="0 0 800 440" role="img"><title>Minh họa công nghệ</title><rect width="800" height="440" fill="#d7e4de"/><g opacity=".3" stroke="#304f43" stroke-width="1"><path d="M40 40H140M40 40V140M660 400H760V300"/></g><rect x="175" y="65" width="440" height="280" rx="10" fill="#304f43"/><rect x="192" y="81" width="406" height="243" rx="3" fill="#f6f4e8"/><path d="M145 344H645L681 369H110Z" fill="#304f43"/><rect x="220" y="108" width="100" height="187" rx="2" fill="#b4ccbb"/><rect x="341" y="110" width="230" height="86" fill="#d6a66e"/><path d="M354 231H554M354 250H520M354 269H542" stroke="#304f43" stroke-width="7" opacity=".4"/><circle cx="546" cy="150" r="24" fill="#f4e4c9"/><path d="M340 195L408 131L462 195Z" fill="#304f43" opacity=".7"/><circle cx="105" cy="295" r="35" fill="#d6a66e"/><path d="M686 330V181M686 254Q628 218 637 184Q692 177 686 254M686 279Q740 236 733 210Q681 203 686 279" stroke="#304f43" stroke-width="9" fill="#b4ccbb"/><path d="M655 321H718L708 371H666Z" fill="#304f43"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img">
+  <title>Kiến trúc MVC và luồng xử lý Request thực tế của dự án Góc Nhìn bằng PHP</title>
+  <rect width="1280" height="720" fill="#0F172A"/>
+  <!-- Top Window Bar -->
+  <rect x="40" y="32" width="1200" height="48" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="68" cy="56" r="7" fill="#EF4444"/>
+  <circle cx="90" cy="56" r="7" fill="#F59E0B"/>
+  <circle cx="112" cy="56" r="7" fill="#10B981"/>
+  <text x="145" y="62" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#F8FAFC">C:\xampp\htdocs\news-blog-cms — Kiến trúc PHP MVC Không Framework của Nhóm</text>
+
+  <!-- 5-Step Flow Pipeline at Top -->
+  <g transform="translate(40, 105)">
+    <rect x="0" y="0" width="210" height="90" rx="8" fill="#1E293B" stroke="#F4B886" stroke-width="2"/>
+    <text x="16" y="28" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="12" font-weight="700" fill="#F4B886">1. TRÌNH DUYỆT</text>
+    <text x="16" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">GET / POST Request</text>
+    <text x="16" y="74" font-family="monospace" font-size="12" fill="#94A3B8">index.php?r=article</text>
+
+    <text x="222" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="22" font-weight="700" fill="#F4B886">→</text>
+
+    <rect x="248" y="0" width="210" height="90" rx="8" fill="#1E293B" stroke="#38BDF8" stroke-width="2"/>
+    <text x="264" y="28" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="12" font-weight="700" fill="#38BDF8">2. FRONT CONTROLLER</text>
+    <text x="264" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">index.php &amp; routes.php</text>
+    <text x="264" y="74" font-family="monospace" font-size="12" fill="#94A3B8">Security::checkCsrf()</text>
+
+    <text x="470" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="22" font-weight="700" fill="#38BDF8">→</text>
+
+    <rect x="496" y="0" width="210" height="90" rx="8" fill="#1E293B" stroke="#34D399" stroke-width="2"/>
+    <text x="512" y="28" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="12" font-weight="700" fill="#34D399">3. CONTROLLER</text>
+    <text x="512" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Post / PublicController</text>
+    <text x="512" y="74" font-family="monospace" font-size="12" fill="#94A3B8">Auth::requireUser()</text>
+
+    <text x="718" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="22" font-weight="700" fill="#34D399">→</text>
+
+    <rect x="744" y="0" width="210" height="90" rx="8" fill="#1E293B" stroke="#FBBF24" stroke-width="2"/>
+    <text x="760" y="28" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="12" font-weight="700" fill="#FBBF24">4. MODEL &amp; PDO</text>
+    <text x="760" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Post::save() / DB::all()</text>
+    <text x="760" y="74" font-family="monospace" font-size="12" fill="#94A3B8">Prepared Statements</text>
+
+    <text x="966" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="22" font-weight="700" fill="#FBBF24">→</text>
+
+    <rect x="990" y="0" width="210" height="90" rx="8" fill="#1E293B" stroke="#F472B6" stroke-width="2"/>
+    <text x="1006" y="28" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="12" font-weight="700" fill="#F472B6">5. VIEW TEMPLATE</text>
+    <text x="1006" y="52" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">layout.php + Views</text>
+    <text x="1006" y="74" font-family="monospace" font-size="12" fill="#94A3B8">Escape đầu ra e($val)</text>
+  </g>
+
+  <!-- Left Code Panel: Week 1 Problem vs Week 3 Solution -->
+  <rect x="40" y="222" width="580" height="456" rx="10" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+  <rect x="40" y="222" width="580" height="40" rx="10" fill="#1E293B"/>
+  <text x="64" y="247" font-family="monospace" font-size="14" font-weight="700" fill="#F4B886">app/Models/Post.php — Giao dịch lưu bài &amp; khóa phiên bản</text>
+
+  <text x="64" y="290" font-family="monospace" font-size="13.5" fill="#93C5FD">return DB::transaction(function() use ($user, $id, ...) {</text>
+  <text x="84" y="318" font-family="monospace" font-size="13.5" fill="#E2E8F0">$p = $id ? self::get($id, true) : null; <tspan fill="#64748B">// SELECT ... FOR UPDATE</tspan></text>
+  <text x="84" y="346" font-family="monospace" font-size="13.5" fill="#E2E8F0">if ($p) {</text>
+  <text x="104" y="374" font-family="monospace" font-size="13.5" fill="#34D399">self::editable($p, $user); <tspan fill="#64748B">// Chỉ sửa draft / rejected</tspan></text>
+  <text x="104" y="402" font-family="monospace" font-size="13.5" fill="#FBBF24">self::version($p, number_input('version')); <tspan fill="#64748B">// Chống ghi đè</tspan></text>
+  <text x="84" y="430" font-family="monospace" font-size="13.5" fill="#E2E8F0">}</text>
+  <text x="84" y="458" font-family="monospace" font-size="13.5" fill="#E2E8F0">$image = Security::upload($_FILES['cover'] ?? null);</text>
+  <text x="84" y="486" font-family="monospace" font-size="13.5" fill="#F472B6">DB::query('UPDATE posts SET ..., version=version+1 ...');</text>
+  <text x="84" y="514" font-family="monospace" font-size="13.5" fill="#E2E8F0">self::history($id, $user['id'], 'edit', $p['status'], ...);</text>
+  <text x="64" y="542" font-family="monospace" font-size="13.5" fill="#93C5FD">});</text>
+
+  <rect x="64" y="572" width="532" height="84" rx="8" fill="#1E293B" stroke="#B84227" stroke-width="1.5"/>
+  <text x="84" y="600" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#F4B886">Kinh nghiệm thực tế của nhóm khi viết bằng PHP thuần:</text>
+  <text x="84" y="624" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#CBD5E1">Tuần đầu gộp chung SQL vào View khiến sửa 1 dòng giao diện làm</text>
+  <text x="84" y="644" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="13" fill="#CBD5E1">hỏng form lưu bài. Tách sang MVC giúp 5 người chia việc độc lập.</text>
+
+  <!-- Right Panel: Directory Tree & Responsibilities -->
+  <rect x="645" y="222" width="595" height="456" rx="10" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+  <rect x="645" y="222" width="595" height="40" rx="10" fill="#1E293B"/>
+  <text x="669" y="247" font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" font-weight="700" fill="#38BDF8">Cấu trúc thư mục tách biệt trách nhiệm (34 tệp PHP)</text>
+
+  <g font-family="'Segoe UI', system-ui, Arial, sans-serif" font-size="14" fill="#E2E8F0">
+    <rect x="669" y="280" width="545" height="68" rx="8" fill="#1E293B"/>
+    <text x="689" y="306" font-weight="700" fill="#34D399">📁 app/Controllers/ (5 tệp)</text>
+    <text x="689" y="330" font-size="13" fill="#94A3B8">PublicController · PostController · AdminController · AuthController · CommentController</text>
+
+    <rect x="669" y="362" width="545" height="68" rx="8" fill="#1E293B"/>
+    <text x="689" y="388" font-weight="700" fill="#FBBF24">📁 app/Models/ &amp; app/Core/ (9 tệp)</text>
+    <text x="689" y="412" font-size="13" fill="#94A3B8">Post · Comment · Taxonomy · User · DB (PDO) · Auth · Security (CSRF &amp; Purifier)</text>
+
+    <rect x="669" y="444" width="545" height="68" rx="8" fill="#1E293B"/>
+    <text x="689" y="470" font-weight="700" fill="#F472B6">📁 app/Views/ (18 tệp giao diện)</text>
+    <text x="689" y="494" font-size="13" fill="#94A3B8">Chỉ trình bày dữ liệu &amp; escape bằng hàm e(), bảo toàn hợp đồng view-contract.php</text>
+
+    <rect x="669" y="526" width="545" height="130" rx="8" fill="#0F2922" stroke="#10B981" stroke-width="1.5"/>
+    <text x="689" y="554" font-weight="700" fill="#34D399">✓ 3 nguyên tắc giữ Backend không lỗi khi nâng cấp UI:</text>
+    <text x="689" y="580" font-size="13.5" fill="#D1FAE5">1. Giữ nguyên thuộc tính name, action, _csrf trên mọi biểu mẫu POST</text>
+    <text x="689" y="605" font-size="13.5" fill="#D1FAE5">2. Mọi tham số tìm kiếm (kể cả số 0 và ký tự % _) đi qua PDO Prepared</text>
+    <text x="689" y="630" font-size="13.5" fill="#D1FAE5">3. Kiểm tra tự động bằng regression-readonly.php &amp; view-contract.php</text>
+  </g>
+</svg>

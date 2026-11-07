@@ -39,9 +39,17 @@ app/bootstrap.php
 app/helpers.php
 assets/css/app.css
 assets/images/cover-1.svg
+assets/images/cover-10.svg
+assets/images/cover-11.svg
+assets/images/cover-12.svg
 assets/images/cover-2.svg
 assets/images/cover-3.svg
 assets/images/cover-4.svg
+assets/images/cover-5.svg
+assets/images/cover-6.svg
+assets/images/cover-7.svg
+assets/images/cover-8.svg
+assets/images/cover-9.svg
 assets/js/app.js
 assets/vendor/bootstrap/LICENSE
 assets/vendor/bootstrap/bootstrap.min.css

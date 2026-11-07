@@ -4,6 +4,21 @@
   <p><?= e($description) ?></p>
 </section>
 
+<?php if ($categories): ?>
+<nav class="category-strip category-strip--pills" aria-label="Chủ đề bài viết" data-testid="explore-topic-strip">
+  <a class="<?= $filters['category'] === '' ? 'selected' : '' ?>"
+     <?= $filters['category'] === '' ? 'aria-current="page"' : '' ?>
+     href="<?= e(url('articles', $filters['q'] !== '' ? ['q' => $filters['q']] : [])) ?>">Tất cả</a>
+  <?php foreach ($categories as $c): ?>
+    <a class="<?= $filters['category'] === $c['slug'] ? 'selected' : '' ?>"
+       <?= $filters['category'] === $c['slug'] ? 'aria-current="page"' : '' ?>
+       href="<?= e(url('articles', ($filters['q'] !== '' ? ['q' => $filters['q']] : []) + ['category' => $c['slug']])) ?>">
+      <?= e($c['name']) ?><?php if (!empty($c['post_count'])): ?><span><?= (int) $c['post_count'] ?></span><?php endif ?>
+    </a>
+  <?php endforeach ?>
+</nav>
+<?php endif ?>
+
 <form method="get" action="<?= e(config('base_path') . '/index.php') ?>" class="search-panel" data-testid="article-search-form">
   <input type="hidden" name="r" value="articles">
   <div class="search-input">
@@ -27,7 +42,7 @@
   <div>
     <label class="visually-hidden" for="tag">Thẻ</label>
     <select class="form-select" id="tag" name="tag" data-testid="article-filter-tag">
-      <option value="">Tất cả thẻ</option>
+      <option value="">Tất cả thẻ<?= $filters['category'] !== '' ? ' trong chủ đề' : '' ?></option>
       <?php foreach ($tags as $t): ?>
         <option value="<?= e($t['slug']) ?>" <?= $filters['tag'] === $t['slug'] ? 'selected' : '' ?>><?= e($t['name']) ?></option>
       <?php endforeach ?>
@@ -38,7 +53,9 @@
 
 <div class="results-heading" data-testid="article-results-heading">
   <span><?= (int) $total ?> bài viết<?= $filters['q'] !== '' ? ' cho “' . e($filters['q']) . '”' : '' ?></span>
-  <a href="<?= e(url('articles')) ?>">Xóa bộ lọc</a>
+  <?php if ($filters['q'] !== '' || $filters['category'] !== '' || $filters['tag'] !== ''): ?>
+    <a href="<?= e(url('articles')) ?>" data-testid="article-clear-filter-link">Xóa bộ lọc</a>
+  <?php endif ?>
 </div>
 
 <?php if (!$items): ?>
