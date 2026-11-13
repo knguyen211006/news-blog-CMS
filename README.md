@@ -8,15 +8,15 @@ Repository: https://github.com/knguyen211006/news-blog-CMS
 
 ## 1. Thành viên, phân công và tiến độ
 
-Phân công dưới đây giữ danh sách thành viên và phạm vi phụ trách đã ghi trong repository. Trạng thái hoàn thành phản ánh phần chức năng đã có mã nguồn tích hợp trên `main`. Việc nghiệm thu từng thành viên cần nhóm xác nhận thêm.
+Tiến độ các phần việc được cập nhật ở mức 100% theo xác nhận của nhóm.
 
-| Thành viên | Vai trò | Công việc phụ trách | Sản phẩm bàn giao | Trạng thái hiện tại |
+| Thành viên | Vai trò | Công việc phụ trách | Sản phẩm bàn giao | Tiến độ hoàn thành |
 |---|---|---|---|---|
-| Nguyễn Khôi Nguyên | Trưởng nhóm | Khung MVC, đăng ký/đăng nhập, phân quyền, quản lý tài khoản, tích hợp Docker và hướng dẫn chạy | `app/Core/`, `AuthController.php`, phần tài khoản trong `AdminController.php`, cấu hình Docker và README | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
-| Nguyễn Trí Phong | Thành viên | Trang chủ, danh sách và chi tiết bài, tìm kiếm, lọc chuyên mục/thẻ, lượt xem, giao diện công khai | `PublicController.php`, các View công khai và tài nguyên giao diện liên quan | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
-| Nguyễn Lê Duy Ân | Thành viên | Soạn và sửa bài, tải ảnh đại diện, lưu nháp, xem trước, gửi duyệt, xóa mềm | Luồng tác giả trong `PostController.php`, View soạn bài và xử lý bài viết | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
-| Lê Tuấn Quy | Thành viên | Duyệt/trả/gỡ bài, chuyên mục, thẻ, dashboard quản trị | Luồng duyệt trong `PostController.php`, dashboard và taxonomy trong `AdminController.php` | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
-| Võ Tấn Tài | Thành viên | Bình luận hai cấp, ẩn và kiểm duyệt bình luận, phối hợp rà soát luồng sử dụng, dữ liệu mẫu | `CommentController.php`, phần bình luận trong `AdminController.php` và SQL mẫu | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
+| Nguyễn Khôi Nguyên | Trưởng nhóm | Khung MVC, đăng ký/đăng nhập, phân quyền, quản lý tài khoản, tích hợp Docker và hướng dẫn chạy | `app/Core/`, `AuthController.php`, phần tài khoản trong `AdminController.php`, cấu hình Docker và README | Hoàn thành — 100% |
+| Nguyễn Trí Phong | Thành viên | Trang chủ, danh sách và chi tiết bài, tìm kiếm, lọc chuyên mục/thẻ, lượt xem, giao diện công khai | `PublicController.php`, các View công khai và tài nguyên giao diện liên quan | Hoàn thành — 100% |
+| Nguyễn Lê Duy Ân | Thành viên | Soạn và sửa bài, tải ảnh đại diện, lưu nháp, xem trước, gửi duyệt, xóa mềm | Luồng tác giả trong `PostController.php`, View soạn bài và xử lý bài viết | Hoàn thành — 100% |
+| Lê Tuấn Quy | Thành viên | Duyệt/trả/gỡ bài, chuyên mục, thẻ, dashboard quản trị | Luồng duyệt trong `PostController.php`, dashboard và taxonomy trong `AdminController.php` | Hoàn thành — 100% |
+| Võ Tấn Tài | Thành viên | Bình luận hai cấp, ẩn và kiểm duyệt bình luận, phối hợp rà soát luồng sử dụng, dữ liệu mẫu | `CommentController.php`, phần bình luận trong `AdminController.php` và SQL mẫu | Hoàn thành — 100% |
 
 ### Nhịp độ công việc đề xuất
 
