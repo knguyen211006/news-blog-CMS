@@ -18,20 +18,20 @@ Tiến độ các phần việc được cập nhật ở mức 100% theo xác n
 | Lê Tuấn Quy | Thành viên | Duyệt/trả/gỡ bài, chuyên mục, thẻ, dashboard quản trị | Luồng duyệt trong `PostController.php`, dashboard và taxonomy trong `AdminController.php` | Hoàn thành — 100% |
 | Võ Tấn Tài | Thành viên | Bình luận hai cấp, ẩn và kiểm duyệt bình luận, phối hợp rà soát luồng sử dụng, dữ liệu mẫu | `CommentController.php`, phần bình luận trong `AdminController.php` và SQL mẫu | Hoàn thành — 100% |
 
-### Nhịp độ công việc đề xuất
+### Phối hợp sau khi hoàn thành
 
-Nhóm có thể áp dụng lịch dưới đây cho các lần chỉnh sửa tiếp theo. Đây là kế hoạch phối hợp đề xuất để nhóm thống nhất trước khi áp dụng.
+Cả 5 thành viên đã hoàn thành phần việc theo bảng phân công. Nhóm chuyển sang bàn giao và hỗ trợ sử dụng theo nhịp phối hợp dưới đây.
 
-| Thời điểm | Người phụ trách | Việc cần cập nhật |
+| Mốc công việc | Người phụ trách | Nội dung phối hợp |
 |---|---|---|
-| Đầu mỗi ngày làm việc | Từng thành viên | Ghi nhiệm vụ sẽ xử lý và đầu ra cần bàn giao |
-| Cuối mỗi ngày làm việc | Từng thành viên | Cập nhật việc đã xong, việc còn vướng và commit hoặc pull request liên quan |
-| Khi có phần việc sẵn sàng bàn giao | Thành viên phụ trách và người rà soát | Đối chiếu yêu cầu, ghi nhận lỗi còn lại và kết quả rà soát |
-| Cuối mỗi tuần hoặc trước mốc nộp | Trưởng nhóm cùng cả nhóm | Tổng hợp tiến độ, điều chỉnh phần việc và chốt các mục đã nghiệm thu |
+| Chuẩn bị bàn giao | Từng thành viên | Tổng hợp phần chức năng phụ trách và cách sử dụng để trình bày |
+| Chốt phiên bản nộp | Trưởng nhóm | Thống nhất mã nguồn trên `main` và hướng dẫn chạy Docker của bản mẫu |
+| Khi trình bày hoặc chạy trên máy khác | Thành viên phụ trách chức năng liên quan | Giải thích luồng xử lý và hỗ trợ cài đặt, sử dụng |
+| Khi phát sinh yêu cầu sửa sau bàn giao | Trưởng nhóm và thành viên phụ trách | Ghi nhận yêu cầu riêng, phân công xử lý và cập nhật phiên bản tương ứng |
 
-### Điều kiện ghi nhận hoàn thành
+### Ghi nhận hoàn thành
 
-Một phần việc được ghi nhận hoàn thành khi đã có mã nguồn trên `main`, đáp ứng đầu ra trong bảng phân công, có kết quả rà soát của nhóm và đã xử lý lỗi cản trở sử dụng. Khi chốt, nhóm bổ sung ngày hoàn thành thực tế cùng commit hoặc pull request bàn giao để theo dõi.
+Tiến độ của toàn bộ phần việc trong bảng phân công là **100%**, theo xác nhận của nhóm. Mã nguồn các chức năng đã được tích hợp trên `main`, cùng cấu hình Docker và hướng dẫn cài đặt bản mẫu. Các yêu cầu phát sinh sau mốc này được theo dõi như công việc bổ sung cho phiên bản tiếp theo.
 
 ## 2. Chức năng chính
 
