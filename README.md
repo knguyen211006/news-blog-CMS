@@ -6,15 +6,32 @@
 
 Repository: https://github.com/knguyen211006/news-blog-CMS
 
-## 1. Thành viên và phân công
+## 1. Thành viên, phân công và tiến độ
 
-| Thành viên | Vai trò | Phụ trách |
+Phân công dưới đây giữ danh sách thành viên và phạm vi phụ trách đã ghi trong repository. Trạng thái hoàn thành phản ánh phần chức năng đã có mã nguồn tích hợp trên `main`. Việc nghiệm thu từng thành viên cần nhóm xác nhận thêm.
+
+| Thành viên | Vai trò | Công việc phụ trách | Sản phẩm bàn giao | Trạng thái hiện tại |
+|---|---|---|---|---|
+| Nguyễn Khôi Nguyên | Trưởng nhóm | Khung MVC, đăng ký/đăng nhập, phân quyền, quản lý tài khoản, tích hợp Docker và hướng dẫn chạy | `app/Core/`, `AuthController.php`, phần tài khoản trong `AdminController.php`, cấu hình Docker và README | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
+| Nguyễn Trí Phong | Thành viên | Trang chủ, danh sách và chi tiết bài, tìm kiếm, lọc chuyên mục/thẻ, lượt xem, giao diện công khai | `PublicController.php`, các View công khai và tài nguyên giao diện liên quan | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
+| Nguyễn Lê Duy Ân | Thành viên | Soạn và sửa bài, tải ảnh đại diện, lưu nháp, xem trước, gửi duyệt, xóa mềm | Luồng tác giả trong `PostController.php`, View soạn bài và xử lý bài viết | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
+| Lê Tuấn Quy | Thành viên | Duyệt/trả/gỡ bài, chuyên mục, thẻ, dashboard quản trị | Luồng duyệt trong `PostController.php`, dashboard và taxonomy trong `AdminController.php` | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
+| Võ Tấn Tài | Thành viên | Bình luận hai cấp, ẩn và kiểm duyệt bình luận, phối hợp rà soát luồng sử dụng, dữ liệu mẫu | `CommentController.php`, phần bình luận trong `AdminController.php` và SQL mẫu | Đã có mã nguồn trên main, chờ nhóm xác nhận nghiệm thu |
+
+### Nhịp độ công việc đề xuất
+
+Nhóm có thể áp dụng lịch dưới đây cho các lần chỉnh sửa tiếp theo. Đây là kế hoạch phối hợp đề xuất để nhóm thống nhất trước khi áp dụng.
+
+| Thời điểm | Người phụ trách | Việc cần cập nhật |
 |---|---|---|
-| Nguyễn Khôi Nguyên | Trưởng nhóm | Khung MVC, xác thực, phân quyền, quản lý tài khoản; tích hợp, README |
-| Nguyễn Trí Phong | Thành viên | Giao diện công khai, tìm kiếm, lọc, đếm lượt xem |
-| Nguyễn Lê Duy Ân | Thành viên | Soạn bài, ảnh đại diện, CRUD bài viết, gửi duyệt |
-| Lê Tuấn Quy | Thành viên | Duyệt bài, chuyên mục, thẻ, dashboard |
-| Võ Tấn Tài | Thành viên | Bình luận phân cấp, kiểm duyệt; điều phối kiểm thử, dữ liệu demo |
+| Đầu mỗi ngày làm việc | Từng thành viên | Ghi nhiệm vụ sẽ xử lý và đầu ra cần bàn giao |
+| Cuối mỗi ngày làm việc | Từng thành viên | Cập nhật việc đã xong, việc còn vướng và commit hoặc pull request liên quan |
+| Khi có phần việc sẵn sàng bàn giao | Thành viên phụ trách và người rà soát | Đối chiếu yêu cầu, ghi nhận lỗi còn lại và kết quả rà soát |
+| Cuối mỗi tuần hoặc trước mốc nộp | Trưởng nhóm cùng cả nhóm | Tổng hợp tiến độ, điều chỉnh phần việc và chốt các mục đã nghiệm thu |
+
+### Điều kiện ghi nhận hoàn thành
+
+Một phần việc được ghi nhận hoàn thành khi đã có mã nguồn trên `main`, đáp ứng đầu ra trong bảng phân công, có kết quả rà soát của nhóm và đã xử lý lỗi cản trở sử dụng. Khi chốt, nhóm bổ sung ngày hoàn thành thực tế cùng commit hoặc pull request bàn giao để theo dõi.
 
 ## 2. Chức năng chính
 
