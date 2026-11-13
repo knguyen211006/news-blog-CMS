@@ -166,6 +166,26 @@ Các extension cần thiết phải báo `OK`; script in phiên bản PHP và da
 
 Giữ `config/local.php` ở máy chạy XAMPP vì tệp chứa thông tin kết nối của máy đó.
 
+### 5.5. Xem dữ liệu Docker bằng phpMyAdmin
+
+Hướng dẫn này áp dụng cho máy đã cấu hình phpMyAdmin của XAMPP kết nối tới MariaDB Docker qua `127.0.0.1:3307`, với tên máy chủ **Goc Nhin Docker 8088**. Trên máy mới clone repository, cần thiết lập kết nối cục bộ này trước khi sử dụng.
+
+1. Mở Docker Desktop và khởi động dự án như mục 5.1 hoặc 5.2.
+2. Mở XAMPP Control Panel, bật **Apache**.
+3. Truy cập <http://localhost/phpmyadmin/>, chọn máy chủ **Goc Nhin Docker 8088**, rồi chọn database `news_blog_cms`.
+4. Mở bảng `users` để xem tài khoản, `posts` để xem bài viết (kể cả bài nháp), hoặc `comments` để xem bình luận. Chọn **Browse / Duyệt** để hiển thị bản ghi.
+5. Sau khi đăng ký tài khoản hoặc lưu bài thành công trên web cổng 8088, tải lại bảng để thấy dữ liệu vừa lưu.
+
+| Nhu cầu | Docker | Apache trong XAMPP | MySQL trong XAMPP |
+|---|---|---|---|
+| Dùng website cổng 8088 | Bật dịch vụ web và db | Có thể tắt | Có thể tắt |
+| Xem dữ liệu Docker bằng phpMyAdmin | Bật MariaDB Docker | Bật | Có thể tắt |
+| Xem database XAMPP gốc bằng phpMyAdmin | Có thể tắt | Bật | Bật |
+
+Máy chủ Docker sử dụng cổng kết nối database 3307 trên máy này. Máy chủ XAMPP sử dụng cổng 3306. Hãy chọn đúng máy chủ trước khi xem bảng, kể cả khi cả hai cùng có database tên `news_blog_cms`.
+
+Dữ liệu mới được lưu trong volume MariaDB đang chạy. Tệp SQL trong thư mục dự án là bản chụp tại thời điểm xuất và chỉ cập nhật khi xuất lại. Giữ thông tin đăng nhập kết nối trong cấu hình cục bộ và `.env` trên máy sử dụng.
+
 ## 6. Cấu trúc thư mục
 
 | Đường dẫn | Nội dung |
